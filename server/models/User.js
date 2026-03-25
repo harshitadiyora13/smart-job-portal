@@ -1,59 +1,75 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, 'Please add a name'],
+            required: true,
         },
         email: {
             type: String,
-            required: [true, 'Please add an email'],
+            required: true,
             unique: true,
-            match: [
-                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                'Please add a valid email',
-            ],
+            lowercase: true,
+            trim: true,
         },
         password: {
             type: String,
-            required: [true, 'Please add a password'],
-            minlength: 6,
-            select: false, // Don't return password by default
+            required: true,
+            select: false,
         },
         role: {
             type: String,
-            enum: ['seeker', 'recruiter', 'admin'],
-            default: 'seeker',
+            enum: ["jobseeker", "recruiter", "admin"],
+            default: "jobseeker",
         },
-        profile: {
-            bio: { type: String },
-            skills: [{ type: String }],
-            resume: { type: String },
-            resumeOriginalName: { type: String },
-            company: { type: String },
-            profilePhoto: { type: String },
+
+        // Profile fields for jobseekers
+        phone: String,
+        location: String,
+        bio: String,
+        skills: [String],
+        experience: [{
+            company: String,
+            position: String,
+            duration: String,
+            description: String
+        }],
+        education: [{
+            institution: String,
+            degree: String,
+            year: String
+        }],
+        resume: String,
+
+        savedJobs: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Job'
+        }],
+
+        isVerified: {
+            type: Boolean,
+            default: false,
         },
+        verificationToken: String,
+        resetPasswordToken: String,
+        resetPasswordExpire: Date,
     },
-    {
-        timestamps: true, // createdAt & updatedAt
-    }
+    { timestamps: true }
 );
 
-// Encrypt password before saving
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password') || !this.password) {
-        return next();
+// ✅ CORRECT pre-save hook
+userSchema.pre("save", async function () {
+    // `this` MUST be a normal function
+    if (!this.isModified("password") || !this.password) {
+        return;
     }
+
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Match password for login
-userSchema.methods.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
-};
+const User = mongoose.model("User", userSchema);
 
-const User = mongoose.model('User', userSchema);
-export default User;
+module.exports = User;

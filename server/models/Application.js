@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const applicationSchema = new mongoose.Schema({
     job: {
@@ -13,13 +13,15 @@ const applicationSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'shortlisted', 'rejected', 'accepted'],
+        enum: ['pending', 'reviewed', 'accepted', 'approved', 'shortlisted', 'rejected', 'interview_scheduled'],
         default: 'pending'
     },
-    resume: {
-        type: String, // Link to the uploaded file
-        required: true
+    appliedAt: {
+        type: Date,
+        default: Date.now
     }
 }, { timestamps: true });
 
-export default mongoose.model('Application', applicationSchema);
+const Application = mongoose.model('Application', applicationSchema);
+
+module.exports = Application;

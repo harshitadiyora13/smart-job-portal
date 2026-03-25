@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+const jwt = require('jsonwebtoken');
+const User = require('../models/User.js');
 
-export const protect = async (req, res, next) => {
+const protect = async (req, res, next) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -10,7 +10,16 @@ export const protect = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
 
             // Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            let decoded;
+            try {
+                decoded = jwt.verify(token, process.env.JWT_SECRET);
+            } catch (err) {
+                if (process.env.JWT_SECRET_LEGACY) {
+                    decoded = jwt.verify(token, process.env.JWT_SECRET_LEGACY);
+                } else {
+                    throw err;
+                }
+            }
 
             // Get user from the token
             req.user = await User.findById(decoded.id).select('-password');
@@ -31,7 +40,7 @@ export const protect = async (req, res, next) => {
     }
 };
 
-export const authorize = (...roles) => {
+const authorize = (...roles) => {
     return (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({ message: 'User not authenticated' });
@@ -45,3 +54,5 @@ export const authorize = (...roles) => {
         next();
     };
 };
+
+module.exports = { protect, authorize };

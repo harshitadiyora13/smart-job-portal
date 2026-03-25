@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const jobSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -7,6 +7,16 @@ const jobSchema = new mongoose.Schema({
     location: { type: String, required: true },
     salary: { type: String },
     requirements: [{ type: String }], // Skills needed for smart matching
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: false
+    },
     jobType: {
         type: String,
         enum: ['Full-time', 'Part-time', 'Remote'],
@@ -19,4 +29,6 @@ const jobSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-export default mongoose.model('Job', jobSchema);
+const Job = mongoose.model('Job', jobSchema);
+
+module.exports = Job;
