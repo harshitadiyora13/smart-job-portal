@@ -142,68 +142,81 @@ const ViewApplicants = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {applicants.map((application) => (
-                                            <tr key={application._id}>
-                                                <td>
-                                                    <div className="fw-bold">
-                                                        {application.applicant?.name || 'N/A'}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center gap-2">
-                                                        <Mail size={16} className="text-muted" />
-                                                        {application.applicant?.email || 'N/A'}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {new Date(application.createdAt).toLocaleDateString()}
-                                                </td>
-                                                <td>
-                                                    <span className={`badge rounded-pill ${application.status === 'approved' ? 'bg-success' :
-                                                        application.status === 'rejected' ? 'bg-danger' :
-                                                            application.status === 'interview_scheduled' ? 'bg-info' :
-                                                                application.status === 'shortlisted' ? 'bg-primary' :
-                                                                    application.status === 'reviewed' ? 'bg-secondary' :
-                                                                        'bg-warning'
-                                                        }`}>
-                                                        {application.status === 'interview_scheduled' ? 'Interview Scheduled' :
-                                                            application.status === 'shortlisted' ? 'Shortlisted' :
-                                                                application.status === 'reviewed' ? 'Reviewed' :
-                                                                    application.status || 'Pending'}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    {application.status === 'interview_scheduled' ? (
-                                                        <div className="d-flex align-items-center gap-1 text-info">
-                                                            <CalendarCheck size={16} />
-                                                            <span className="small">Interview Scheduled</span>
+                                        {applicants.map((application) => {
+                                            const applicantId = typeof application.applicant === 'object' ? application.applicant?._id : application.applicant;
+                                            return (
+                                                <tr key={application._id}>
+                                                    <td>
+                                                        {applicantId ? (
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-link p-0 text-decoration-none fw-bold text-start"
+                                                                onClick={() => navigate(`/applicant/${applicantId}`)}
+                                                            >
+                                                                {application.applicant?.name || 'N/A'}
+                                                            </button>
+                                                        ) : (
+                                                            <div className="fw-bold">
+                                                                {application.applicant?.name || 'N/A'}
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <Mail size={16} className="text-muted" />
+                                                            {application.applicant?.email || 'N/A'}
                                                         </div>
-                                                    ) : (
-                                                        <span className="text-muted small">Not Scheduled</span>
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    <div className="btn-group" role="group">
-                                                        <button
-                                                            className="btn btn-sm btn-outline-success"
-                                                            onClick={() => updateApplicationStatus(application._id, 'approved')}
-                                                            disabled={application.status === 'approved' || application.status === 'interview_scheduled'}
-                                                            title="Approve Application"
-                                                        >
-                                                            <CheckCircle size={16} />
-                                                        </button>
-                                                        <button
-                                                            className="btn btn-sm btn-outline-danger"
-                                                            onClick={() => updateApplicationStatus(application._id, 'rejected')}
-                                                            disabled={application.status === 'rejected' || application.status === 'interview_scheduled'}
-                                                            title="Reject Application"
-                                                        >
-                                                            <XCircle size={16} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td>
+                                                        {new Date(application.createdAt).toLocaleDateString()}
+                                                    </td>
+                                                    <td>
+                                                        <span className={`badge rounded-pill ${application.status === 'approved' ? 'bg-success' :
+                                                            application.status === 'rejected' ? 'bg-danger' :
+                                                                application.status === 'interview_scheduled' ? 'bg-info' :
+                                                                    application.status === 'shortlisted' ? 'bg-primary' :
+                                                                        application.status === 'reviewed' ? 'bg-secondary' :
+                                                                            'bg-warning'
+                                                            }`}>
+                                                            {application.status === 'interview_scheduled' ? 'Interview Scheduled' :
+                                                                application.status === 'shortlisted' ? 'Shortlisted' :
+                                                                    application.status === 'reviewed' ? 'Reviewed' :
+                                                                        application.status || 'Pending'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {application.status === 'interview_scheduled' ? (
+                                                            <div className="d-flex align-items-center gap-1 text-info">
+                                                                <CalendarCheck size={16} />
+                                                                <span className="small">Interview Scheduled</span>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-muted small">Not Scheduled</span>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        <div className="btn-group" role="group">
+                                                            <button
+                                                                className="btn btn-sm btn-outline-success"
+                                                                onClick={() => updateApplicationStatus(application._id, 'approved')}
+                                                                disabled={application.status === 'approved' || application.status === 'interview_scheduled'}
+                                                                title="Approve Application"
+                                                            >
+                                                                <CheckCircle size={16} />
+                                                            </button>
+                                                            <button
+                                                                className="btn btn-sm btn-outline-danger"
+                                                                onClick={() => updateApplicationStatus(application._id, 'rejected')}
+                                                                disabled={application.status === 'rejected' || application.status === 'interview_scheduled'}
+                                                                title="Reject Application"
+                                                            >
+                                                                <XCircle size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

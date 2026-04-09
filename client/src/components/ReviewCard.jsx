@@ -20,14 +20,42 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
     };
 
     const renderStars = (rating) => {
-        return Array.from({ length: 5 }, (_, index) => (
-            <Star
-                key={index}
-                size={16}
-                className={index < rating ? 'text-warning fill-current' : 'text-muted'}
-                fill={index < rating ? 'currentColor' : 'none'}
-            />
-        ));
+        const value = Number(rating || 0);
+        return Array.from({ length: 5 }, (_, index) => {
+            const star = index + 1;
+            const isFull = value >= star;
+            const isHalf = !isFull && value >= star - 0.5;
+            return (
+                <span key={index} className="position-relative d-inline-flex align-items-center justify-content-center" style={{ width: 16, height: 16 }}>
+                    {/* Base empty star */}
+                    <Star
+                        size={16}
+                        className="text-muted"
+                        fill="none"
+                    />
+                    {/* Full star overlay */}
+                    {isFull && (
+                        <span className="position-absolute d-flex align-items-center justify-content-center" style={{ top: 0, left: 0, width: 16, height: 16 }}>
+                            <Star
+                                size={16}
+                                className="text-warning"
+                                fill="currentColor"
+                            />
+                        </span>
+                    )}
+                    {/* Half star overlay using overflow container */}
+                    {isHalf && (
+                        <span className="position-absolute overflow-hidden d-flex align-items-center justify-content-start" style={{ top: 0, left: 0, width: 8, height: 16 }}>
+                            <Star
+                                size={16}
+                                className="text-warning flex-shrink-0"
+                                fill="currentColor"
+                            />
+                        </span>
+                    )}
+                </span>
+            );
+        });
     };
 
     const handleHelpful = async () => {
@@ -160,18 +188,18 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
 
                 {/* Rating Categories */}
                 <div className="mb-3">
-                    <div className="d-flex align-items-center gap-2 mb-2">
+                    <div className="d-flex align-items-center gap-2 mb-3">
                         <span className="fw-semibold">Overall:</span>
                         <div className="d-flex align-items-center gap-1">
                             {renderStars(review.overallRating)}
-                            <span className="ms-1 text-muted">({review.overallRating}.0)</span>
+                            <span className="ms-1 text-muted">({Number(review.overallRating).toFixed(1)})</span>
                         </div>
                     </div>
 
                     <div className="row g-2">
                         <div className="col-6">
                             <div className="d-flex align-items-center gap-2 small">
-                                <span className="text-muted">Work-Life:</span>
+                                <span className="text-muted" style={{ minWidth: '70px' }}>Work-Life:</span>
                                 <div className="d-flex">
                                     {renderStars(review.workLifeBalance)}
                                 </div>
@@ -179,7 +207,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                         </div>
                         <div className="col-6">
                             <div className="d-flex align-items-center gap-2 small">
-                                <span className="text-muted">Salary:</span>
+                                <span className="text-muted" style={{ minWidth: '70px' }}>Salary:</span>
                                 <div className="d-flex">
                                     {renderStars(review.salaryBenefits)}
                                 </div>
@@ -187,7 +215,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                         </div>
                         <div className="col-6">
                             <div className="d-flex align-items-center gap-2 small">
-                                <span className="text-muted">Growth:</span>
+                                <span className="text-muted" style={{ minWidth: '70px' }}>Growth:</span>
                                 <div className="d-flex">
                                     {renderStars(review.careerGrowth)}
                                 </div>
@@ -195,7 +223,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                         </div>
                         <div className="col-6">
                             <div className="d-flex align-items-center gap-2 small">
-                                <span className="text-muted">Culture:</span>
+                                <span className="text-muted" style={{ minWidth: '70px' }}>Culture:</span>
                                 <div className="d-flex">
                                     {renderStars(review.companyCulture)}
                                 </div>
@@ -203,7 +231,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                         </div>
                         <div className="col-6">
                             <div className="d-flex align-items-center gap-2 small">
-                                <span className="text-muted">Management:</span>
+                                <span className="text-muted" style={{ minWidth: '70px' }}>Management:</span>
                                 <div className="d-flex">
                                     {renderStars(review.management)}
                                 </div>
@@ -211,7 +239,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                         </div>
                         <div className="col-6">
                             <div className="d-flex align-items-center gap-2 small">
-                                <span className="text-muted">Environment:</span>
+                                <span className="text-muted" style={{ minWidth: '70px' }}>Environment:</span>
                                 <div className="d-flex">
                                     {renderStars(review.workEnvironment)}
                                 </div>

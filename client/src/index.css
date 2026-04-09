@@ -13,3 +13,39 @@
     transform: translateY(0);
   }
 }
+
+/* Fix btn-outline-secondary hover - maintain visible text/icon */
+body .btn-outline-secondary {
+  transition: all 0.3s ease !important;
+}
+
+body .btn-outline-secondary:hover,
+body .btn-outline-secondary:focus,
+body .btn-outline-secondary:active:hover {
+  background-color: #5a6268 !important;
+  border-color: #5a6268 !important;
+  color: #ffffff !important;
+}
+
+body .btn-outline-secondary:active {
+  background-color: #4a5258 !important;
+  border-color: #4a5258 !important;
+  color: #ffffff !important;
+}
+
+/* Fix btn-link back buttons hover */
+body .btn-link {
+  transition: all 0.3s ease !important;
+}
+
+body .btn-link:hover,
+body .btn-link:focus {
+  color: #495057 !important;
+  opacity: 0.8;
+}
+
+body .btn-link.text-muted:hover,
+body .btn-link.text-muted:focus {
+  color: #212529 !important;
+  opacity: 1;
+}

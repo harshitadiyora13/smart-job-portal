@@ -83,14 +83,43 @@ const ReviewsList = ({ companyId, currentUser, isCompanyOwner = false }) => {
     };
 
     const renderStars = (rating, size = 16) => {
-        return Array.from({ length: 5 }, (_, index) => (
-            <Star
-                key={index}
-                size={size}
-                className={index < rating ? 'text-warning fill-current' : 'text-muted'}
-                fill={index < rating ? 'currentColor' : 'none'}
-            />
-        ));
+        const value = Number(rating || 0);
+        return Array.from({ length: 5 }, (_, index) => {
+            const star = index + 1;
+            const isFull = value >= star;
+            const isHalf = !isFull && value >= star - 0.5;
+            const halfWidth = size / 2;
+            return (
+                <span key={index} className="position-relative d-inline-flex align-items-center justify-content-center" style={{ width: size, height: size }}>
+                    {/* Base empty star */}
+                    <Star
+                        size={size}
+                        className="text-muted"
+                        fill="none"
+                    />
+                    {/* Full star overlay */}
+                    {isFull && (
+                        <span className="position-absolute d-flex align-items-center justify-content-center" style={{ top: 0, left: 0, width: size, height: size }}>
+                            <Star
+                                size={size}
+                                className="text-warning"
+                                fill="currentColor"
+                            />
+                        </span>
+                    )}
+                    {/* Half star overlay using overflow container */}
+                    {isHalf && (
+                        <span className="position-absolute overflow-hidden d-flex align-items-center justify-content-start" style={{ top: 0, left: 0, width: halfWidth, height: size }}>
+                            <Star
+                                size={size}
+                                className="text-warning flex-shrink-0"
+                                fill="currentColor"
+                            />
+                        </span>
+                    )}
+                </span>
+            );
+        });
     };
 
     const getFilterLabel = (filterValue) => {

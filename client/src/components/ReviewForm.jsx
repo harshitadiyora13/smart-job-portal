@@ -23,6 +23,7 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
         }
     });
     const [errors, setErrors] = useState({});
+    const [hoverRating, setHoverRating] = useState({});
 
     const validateForm = () => {
         const newErrors = {};
@@ -129,28 +130,92 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
         }));
     };
 
+    const handleRatingHover = (category, value) => {
+        setHoverRating(prev => ({
+            ...prev,
+            [category]: value
+        }));
+    };
+
+    const handleRatingHoverLeave = (category) => {
+        setHoverRating(prev => ({
+            ...prev,
+            [category]: null
+        }));
+    };
+
     const renderRatingStars = (category, label) => {
+        const currentValue = Number(formData[category]) || 0;
+        const hoverValue = hoverRating[category];
+        const previewValue = hoverValue !== null && hoverValue !== undefined ? hoverValue : currentValue;
+        const displayValue = previewValue % 1 === 0 ? `${previewValue}.0` : previewValue;
+
         return (
             <div className="mb-3">
                 <label className="form-label fw-semibold">{label}</label>
                 <div className="d-flex align-items-center gap-2">
                     <div className="d-flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <button
-                                key={star}
-                                type="button"
-                                className="btn btn-link p-0 text-decoration-none"
-                                onClick={() => handleRatingChange(category, star)}
-                            >
-                                <Star
-                                    size={20}
-                                    className={star <= formData[category] ? 'text-warning fill-current' : 'text-muted'}
-                                    fill={star <= formData[category] ? 'currentColor' : 'none'}
-                                />
-                            </button>
-                        ))}
+                        {[1, 2, 3, 4, 5].map((star) => {
+                            const isFull = previewValue >= star;
+                            const isHalf = !isFull && previewValue >= star - 0.5;
+                            const starColor = hoverValue !== null && hoverValue !== undefined ? 'text-info' : 'text-warning';
+
+                            return (
+                                <div
+                                    key={star}
+                                    className="position-relative"
+                                    style={{ width: 20, height: 20, cursor: 'pointer' }}
+                                    onMouseLeave={() => handleRatingHoverLeave(category)}
+                                >
+                                    {/* Base empty star */}
+                                    <Star
+                                        size={20}
+                                        className="text-muted"
+                                        fill="none"
+                                    />
+                                    {/* Full star overlay */}
+                                    {isFull && (
+                                        <Star
+                                            size={20}
+                                            className={`${starColor} position-absolute top-0 start-0`}
+                                            fill="currentColor"
+                                        />
+                                    )}
+                                    {/* Half star overlay using overflow container */}
+                                    {isHalf && (
+                                        <span className={`position-absolute top-0 start-0 overflow-hidden ${starColor}`} style={{ width: 10, height: 20 }}>
+                                            <Star
+                                                size={20}
+                                                fill="currentColor"
+                                            />
+                                        </span>
+                                    )}
+                                    {/* Click zones: left half = -0.5, right half = full */}
+                                    <div className="position-absolute top-0 start-0 d-flex" style={{ width: 20, height: 20 }}>
+                                        <button
+                                            type="button"
+                                            className="btn btn-link p-0 text-decoration-none"
+                                            style={{ width: 10, height: 20, opacity: 0 }}
+                                            onClick={() => handleRatingChange(category, star - 0.5)}
+                                            onMouseEnter={() => handleRatingHover(category, star - 0.5)}
+                                            title={`${star - 0.5} stars`}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="btn btn-link p-0 text-decoration-none"
+                                            style={{ width: 10, height: 20, opacity: 0 }}
+                                            onClick={() => handleRatingChange(category, star)}
+                                            onMouseEnter={() => handleRatingHover(category, star)}
+                                            title={`${star} stars`}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-                    <span className="text-muted">({formData[category]}.0)</span>
+                    <span className={`${hoverValue !== null && hoverValue !== undefined ? 'text-info fw-semibold' : 'text-muted'}`}>
+                        ({displayValue})
+                    </span>
                 </div>
             </div>
         );
