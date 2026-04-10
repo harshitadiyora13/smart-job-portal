@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Lock, ArrowRight, Briefcase } from "lucide-react";
 import toast from "react-hot-toast";
+import OTPVerification from "../components/OTPVerification";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const Login = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
   const navigate = useNavigate();
 
@@ -48,9 +51,35 @@ const Login = () => {
         navigate("/dashboard/jobseeker");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      const errorData = error.response?.data;
+
+      // If user needs verification, show OTP modal
+      if (errorData?.requiresVerification) {
+        setUnverifiedEmail(errorData.email || formData.email);
+        setShowOTPVerification(true);
+        toast.error("Please verify your email first");
+      } else {
+        toast.error(errorData?.message || "Login failed");
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerificationSuccess = (data) => {
+    toast.success("Account verified! Login successful.");
+
+    // Store auth data
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // Redirect based on role
+    if (data.user.role === "admin") {
+      navigate("/admin-dashboard");
+    } else if (data.user.role === "recruiter") {
+      navigate("/dashboard/recruiter");
+    } else {
+      navigate("/dashboard/jobseeker");
     }
   };
 
@@ -179,6 +208,23 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* --- OTP VERIFICATION MODAL --- */}
+      {showOTPVerification && (
+        <div className="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content border-0 shadow-sm rounded-4">
+              <div className="modal-body p-4">
+                <OTPVerification
+                  email={unverifiedEmail}
+                  onSuccess={handleVerificationSuccess}
+                  onCancel={() => setShowOTPVerification(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

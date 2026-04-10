@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserPlus, Mail, Lock, User, ArrowRight, Briefcase, Building } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import OTPVerification from "../components/OTPVerification";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,38 +13,14 @@ const Register = () => {
     role: "jobseeker",
   });
   const [loading, setLoading] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [resendTimer, setResendTimer] = useState(60);
-  const [isResending, setIsResending] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
 
   const navigate = useNavigate();
 
-  // Countdown timer for resend button
-  useEffect(() => {
-    let interval;
-    if (showSuccessModal && resendTimer > 0) {
-      interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [showSuccessModal, resendTimer]);
-
-  // Resend verification email
-  const handleResendVerification = async () => {
-    setIsResending(true);
-    try {
-      await axios.post(
-        "http://localhost:5000/v1/api/auth/resend-verification",
-        { email: formData.email }
-      );
-      toast.success("Verification email resent successfully!");
-      setResendTimer(60); // Reset timer
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to resend verification email");
-    } finally {
-      setIsResending(false);
-    }
+  // Handle successful OTP verification
+  const handleVerificationSuccess = (data) => {
+    toast.success("Account verified successfully!");
+    navigate("/dashboard/jobseeker");
   };
 
   // Update form state on input change
@@ -63,7 +40,7 @@ const Register = () => {
       );
 
       toast.success(res.data?.message || "Registration successful! Please verify your email.");
-      setShowSuccessModal(true);
+      setShowOTPVerification(true);
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");
     } finally {
@@ -244,47 +221,17 @@ const Register = () => {
         </div>
       </div>
 
-      {/* --- SUCCESS MODAL --- */}
-      {showSuccessModal && (
+      {/* --- OTP VERIFICATION MODAL --- */}
+      {showOTPVerification && (
         <div className="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content border-0 shadow-sm rounded-4">
-              <div className="modal-body p-5 text-center">
-                <div className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style={{ width: "80px", height: "80px" }}>
-                  <UserPlus size={36} />
-                </div>
-                <h3 className="fw-bold mb-3">Registration Successful!</h3>
-                <p className="text-muted mb-4">
-                  We've sent a verification email to <strong>{formData.email}</strong>.
-                  Please check your inbox and click the verification link to activate your account.
-                </p>
-
-                <div className="d-flex gap-3 justify-content-center">
-                  <button
-                    className="btn btn-outline-secondary"
-                    onClick={() => navigate("/login")}
-                  >
-                    Go to Login
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={handleResendVerification}
-                    disabled={isResending || resendTimer > 0}
-                  >
-                    {isResending ? (
-                      <>
-                        <div className="spinner-border spinner-border-sm me-2" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
-                        Resending...
-                      </>
-                    ) : resendTimer > 0 ? (
-                      `Resend (${resendTimer}s)`
-                    ) : (
-                      "Resend Email"
-                    )}
-                  </button>
-                </div>
+              <div className="modal-body p-4">
+                <OTPVerification
+                  email={formData.email}
+                  onSuccess={handleVerificationSuccess}
+                  onCancel={() => setShowOTPVerification(false)}
+                />
               </div>
             </div>
           </div>

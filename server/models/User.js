@@ -52,9 +52,23 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        // OTP Verification fields
+        verificationOTP: {
+            code: String,
+            expiresAt: Date,
+            attempts: { type: Number, default: 0 },
+            maxAttempts: { type: Number, default: 5 }
+        },
         verificationToken: String,
         resetPasswordToken: String,
         resetPasswordExpire: Date,
+        // OTP for password reset
+        resetPasswordOTP: {
+            code: String,
+            expiresAt: Date,
+            attempts: { type: Number, default: 0 },
+            maxAttempts: { type: Number, default: 5 }
+        },
     },
     { timestamps: true }
 );
