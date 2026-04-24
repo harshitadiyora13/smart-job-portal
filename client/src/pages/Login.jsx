@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Lock, ArrowRight, Briefcase } from "lucide-react";
 import toast from "react-hot-toast";
 import OTPVerification from "../components/OTPVerification";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -68,6 +69,23 @@ const Login = () => {
 
   const handleVerificationSuccess = (data) => {
     toast.success("Account verified! Login successful.");
+
+    // Store auth data
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // Redirect based on role
+    if (data.user.role === "admin") {
+      navigate("/admin-dashboard");
+    } else if (data.user.role === "recruiter") {
+      navigate("/dashboard/recruiter");
+    } else {
+      navigate("/dashboard/jobseeker");
+    }
+  };
+
+  const handleGoogleAuthSuccess = (data) => {
+    toast.success("Login successful!");
 
     // Store auth data
     localStorage.setItem("token", data.token);
@@ -174,6 +192,14 @@ const Login = () => {
                     )}
                   </button>
                 </form>
+
+                {/* --- GOOGLE SIGN IN --- */}
+                <div className="mt-4">
+                  <GoogleSignInButton
+                    onSuccess={handleGoogleAuthSuccess}
+                    buttonText="Continue with Google"
+                  />
+                </div>
 
                 {/* --- DIVIDER --- */}
                 <div className="d-flex align-items-center my-5">

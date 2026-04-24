@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Briefcase, MapPin, Calendar, CheckCircle, XCircle, Clock, Eye, Trash2 } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 const MyApplications = () => {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const MyApplications = () => {
     const handleDeleteApplication = async (applicationId, jobTitle, status) => {
         // Check if application can be deleted
         if (!canDeleteApplication(status)) {
-            alert(`Cannot delete application with status "${status}". Applications can only be deleted when status is pending, reviewed, or shortlisted.`);
+            toast.error(`Cannot delete application with status "${status}". Applications can only be deleted when status is pending, reviewed, or shortlisted.`);
             return;
         }
 
@@ -45,11 +46,11 @@ const MyApplications = () => {
                 fetchMyApplications();
 
                 // Show success message
-                alert("Application cancelled successfully!");
+                toast.success("Application cancelled successfully!");
             } catch (error) {
                 console.error("Error deleting application:", error);
                 const errorMessage = error.response?.data?.message || "Failed to cancel application";
-                alert(errorMessage);
+                toast.error(errorMessage);
             }
         }
     };
@@ -71,8 +72,8 @@ const MyApplications = () => {
     const getStatusBadge = (status) => {
         const statusConfig = {
             pending: { color: 'bg-warning', icon: Clock, text: 'Pending' },
-            shortlisted: { color: 'bg-info', icon: Clock, text: 'Shortlisted' },
-            approved: { color: 'bg-success', icon: CheckCircle, text: 'Approved' },
+            shortlisted: { color: 'bg-success', icon: Clock, text: 'Shortlisted' },
+            approved: { color: 'bg-success', icon: CheckCircle, text: 'Shortlisted' },
             rejected: { color: 'bg-danger', icon: XCircle, text: 'Rejected' },
             interview_scheduled: { color: 'bg-primary', icon: Calendar, text: 'Interview Scheduled' }
         };
@@ -93,8 +94,7 @@ const MyApplications = () => {
             { key: 'pending', label: 'Applied' },
             { key: 'reviewed', label: 'Reviewed' },
             { key: 'shortlisted', label: 'Shortlisted' },
-            { key: 'interview_scheduled', label: 'Interview' },
-            { key: 'approved', label: 'Selected' }
+            { key: 'interview_scheduled', label: 'Interview' }
         ];
 
         if (status === 'rejected') {
@@ -107,7 +107,7 @@ const MyApplications = () => {
             accepted: 1,
             shortlisted: 2,
             interview_scheduled: 3,
-            approved: 4
+            approved: 2  // approved maps to shortlisted position
         };
 
         const currentIndex = Number.isInteger(indexByStatus[status]) ? indexByStatus[status] : 0;

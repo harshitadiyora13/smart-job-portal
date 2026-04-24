@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Users, Briefcase, MapPin, Calendar, Mail, Phone, CheckCircle, XCircle, Clock, CalendarCheck } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 const ViewApplicants = () => {
     const { id } = useParams();
@@ -53,10 +54,10 @@ const ViewApplicants = () => {
 
             // Refresh applicants list
             fetchApplicants();
-            alert(`Application ${status} successfully!`);
+            toast.success(`Application ${status} successfully!`);
         } catch (error) {
             console.error("Error updating status:", error);
-            alert("Failed to update application status");
+            toast.error("Failed to update application status");
         }
     };
 
@@ -151,7 +152,13 @@ const ViewApplicants = () => {
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-link p-0 text-decoration-none fw-bold text-start"
-                                                                onClick={() => navigate(`/applicant/${applicantId}`)}
+                                                                onClick={() => {
+                                                                    // Auto-set status to reviewed when viewing applicant
+                                                                    if (application.status === 'pending') {
+                                                                        updateApplicationStatus(application._id, 'reviewed');
+                                                                    }
+                                                                    navigate(`/applicant/${applicantId}`);
+                                                                }}
                                                             >
                                                                 {application.applicant?.name || 'N/A'}
                                                             </button>
@@ -174,14 +181,16 @@ const ViewApplicants = () => {
                                                         <span className={`badge rounded-pill ${application.status === 'approved' ? 'bg-success' :
                                                             application.status === 'rejected' ? 'bg-danger' :
                                                                 application.status === 'interview_scheduled' ? 'bg-info' :
-                                                                    application.status === 'shortlisted' ? 'bg-primary' :
+                                                                    application.status === 'shortlisted' ? 'bg-success' :
                                                                         application.status === 'reviewed' ? 'bg-secondary' :
                                                                             'bg-warning'
                                                             }`}>
-                                                            {application.status === 'interview_scheduled' ? 'Interview Scheduled' :
-                                                                application.status === 'shortlisted' ? 'Shortlisted' :
-                                                                    application.status === 'reviewed' ? 'Reviewed' :
-                                                                        application.status || 'Pending'}
+                                                            {application.status === 'approved' ? 'Shortlisted' :
+                                                                application.status === 'interview_scheduled' ? 'Interview Scheduled' :
+                                                                    application.status === 'shortlisted' ? 'Shortlisted' :
+                                                                        application.status === 'reviewed' ? 'Reviewed' :
+                                                                            application.status === 'rejected' ? 'Rejected' :
+                                                                                'Pending'}
                                                         </span>
                                                     </td>
                                                     <td>
@@ -197,7 +206,7 @@ const ViewApplicants = () => {
                                                     <td>
                                                         <div className="btn-group" role="group">
                                                             <button
-                                                                className="btn btn-sm btn-outline-success"
+                                                                className="btn btn-sm btn-success"
                                                                 onClick={() => updateApplicationStatus(application._id, 'approved')}
                                                                 disabled={application.status === 'approved' || application.status === 'interview_scheduled'}
                                                                 title="Approve Application"

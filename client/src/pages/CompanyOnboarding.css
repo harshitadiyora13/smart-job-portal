@@ -478,3 +478,92 @@
         transform: scale(1);
     }
 }
+
+/* ============================================
+   DARK MODE STYLES
+   ============================================ */
+
+body[data-bs-theme="dark"] .onboarding-container {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+body[data-bs-theme="dark"] .step-number {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+body[data-bs-theme="dark"] .step-item.active .step-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+body[data-bs-theme="dark"] .step-item.completed .step-number {
+    background: #28a745;
+    color: white;
+}
+
+body[data-bs-theme="dark"] .upload-area {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+body[data-bs-theme="dark"] .step-label {
+    color: var(--text-secondary);
+}
+
+body[data-bs-theme="dark"] .step-item.active .step-label {
+    color: var(--accent-primary);
+}
+
+body[data-bs-theme="dark"] h2,
+body[data-bs-theme="dark"] h3,
+body[data-bs-theme="dark"] h4,
+body[data-bs-theme="dark"] .section-title {
+    color: var(--text-primary);
+}
+
+body[data-bs-theme="dark"] .form-label {
+    color: var(--text-primary);
+}
+
+body[data-bs-theme="dark"] .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+body[data-bs-theme="dark"] .btn-outline-secondary {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body[data-bs-theme="dark"] .btn-outline-secondary:hover {
+    background: var(--bg-hover) !important;
+}
+
+body[data-bs-theme="dark"] .navigation-buttons {
+    border-top-color: var(--border-color);
+}
+
+body[data-bs-theme="dark"] .editor-toolbar {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+body[data-bs-theme="dark"] .editor-content {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body[data-bs-theme="dark"] .editor-content:empty:before {
+    color: var(--text-muted);
+}
+
+body[data-bs-theme="dark"] .upload-placeholder {
+    color: var(--text-secondary);
+}
+
+body[data-bs-theme="dark"] .upload-hint {
+    color: var(--text-muted);
+}

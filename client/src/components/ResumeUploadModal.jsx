@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, X, FileText, AlertCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -11,7 +12,7 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
         if (allowedTypes.includes(file.type)) {
             setSelectedFile(file);
         } else {
-            alert('Please upload a PDF or Word document (.pdf, .doc, .docx)');
+            toast.error('Please upload a PDF or Word document (.pdf, .doc, .docx)');
         }
     };
 
@@ -60,10 +61,9 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
                             </div>
                         </div>
 
-                        <div 
-                            className={`border-2 border-dashed rounded-3 p-4 text-center transition-colors ${
-                                dragActive ? 'border-primary bg-primary bg-opacity-10' : 'border-gray-300'
-                            }`}
+                        <div
+                            className={`border-2 border-dashed rounded-3 p-4 text-center transition-colors ${dragActive ? 'border-primary bg-primary bg-opacity-10' : 'border-gray-300'
+                                }`}
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
@@ -75,7 +75,7 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
                                     <p className="text-muted small mb-3">
                                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                     </p>
-                                    <button 
+                                    <button
                                         className="btn btn-sm btn-outline-secondary"
                                         onClick={() => setSelectedFile(null)}
                                     >
@@ -94,8 +94,8 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
                                         className="d-none"
                                         id="resume-upload"
                                     />
-                                    <label 
-                                        htmlFor="resume-upload" 
+                                    <label
+                                        htmlFor="resume-upload"
                                         className="btn btn-outline-primary cursor-pointer"
                                     >
                                         Browse Files
@@ -106,7 +106,7 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
 
                         <div className="mt-3">
                             <small className="text-muted">
-                                <strong>Accepted formats:</strong> PDF, DOC, DOCX<br/>
+                                <strong>Accepted formats:</strong> PDF, DOC, DOCX<br />
                                 <strong>Maximum size:</strong> 5MB
                             </small>
                         </div>
@@ -115,9 +115,9 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
                         <button type="button" className="btn btn-secondary" onClick={onClose}>
                             Cancel
                         </button>
-                        <button 
-                            type="button" 
-                            className="btn btn-primary" 
+                        <button
+                            type="button"
+                            className="btn btn-primary"
                             onClick={handleUpload}
                             disabled={!selectedFile || uploading}
                         >

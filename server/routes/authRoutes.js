@@ -1,5 +1,6 @@
 const express = require('express');
 const { registerUser, loginUser, sendOTP, verifyOTP, resendOTP, forgotPassword, verifyResetOTP, resetPassword } = require('../controllers/authController.js');
+const { googleAuth, getGoogleClientId } = require('../controllers/googleAuthController.js');
 
 const router = express.Router();
 
@@ -15,5 +16,9 @@ router.post('/resend-otp', resendOTP);
 router.post('/forgot-password', forgotPassword);
 router.post('/verify-reset-otp', verifyResetOTP);
 router.post('/reset-password', resetPassword);
+
+// Google OAuth Routes
+router.post('/google', googleAuth);
+router.get('/google-client-id', getGoogleClientId);
 
 module.exports = router;

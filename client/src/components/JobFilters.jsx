@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Filter, X, ChevronDown, MapPin, Briefcase } from "lucide-react";
+import { Filter, X, ChevronDown, Briefcase } from "lucide-react";
 
 const JobFilters = ({ filters, onFiltersChange, onClearFilters }) => {
     const [showAdvanced, setShowAdvanced] = useState(false);
@@ -18,7 +18,7 @@ const JobFilters = ({ filters, onFiltersChange, onClearFilters }) => {
         });
     };
 
-    const hasActiveFilters = filters.location || filters.jobType || filters.company;
+    const hasActiveFilters = filters.jobType || filters.company;
 
     return (
         <div className="card border-0 shadow-sm rounded-4 bg-white mb-4">
@@ -39,30 +39,7 @@ const JobFilters = ({ filters, onFiltersChange, onClearFilters }) => {
 
                 {/* Basic Filters */}
                 <div className="row g-3 mb-3">
-                    <div className="col-md-6">
-                        <label className="form-label fw-semibold">Location</label>
-                        <div className="input-group">
-                            <span className="input-group-text bg-light border-0">
-                                <MapPin size={16} className="text-muted" />
-                            </span>
-                            <input
-                                type="text"
-                                className="form-control bg-light border-0"
-                                placeholder="City, State, or Remote"
-                                value={filters.location || ''}
-                                onChange={(e) => handleFilterChange('location', e.target.value)}
-                            />
-                            {filters.location && (
-                                <button
-                                    className="btn btn-outline-secondary"
-                                    onClick={() => clearFilter('location')}
-                                >
-                                    <X size={14} />
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                         <label className="form-label fw-semibold">Job Type</label>
                         <div className="input-group">
                             <span className="input-group-text bg-light border-0">
@@ -147,17 +124,6 @@ const JobFilters = ({ filters, onFiltersChange, onClearFilters }) => {
                     <div className="border-top pt-3 mt-3">
                         <small className="text-muted fw-semibold">Active Filters:</small>
                         <div className="d-flex flex-wrap gap-2 mt-2">
-                            {filters.location && (
-                                <span className="badge bg-primary d-flex align-items-center gap-1">
-                                    <MapPin size={12} /> {filters.location}
-                                    <button
-                                        className="btn btn-sm btn-link text-white p-0"
-                                        onClick={() => clearFilter('location')}
-                                    >
-                                        <X size={10} />
-                                    </button>
-                                </span>
-                            )}
                             {filters.jobType && (
                                 <span className="badge bg-info d-flex align-items-center gap-1">
                                     <Briefcase size={12} /> {filters.jobType}

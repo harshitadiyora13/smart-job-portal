@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Send, Briefcase, MapPin } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 const EditJob = () => {
     const { id } = useParams();
@@ -166,11 +167,11 @@ const EditJob = () => {
             await axios.put(`http://localhost:5000/v1/api/jobs/update/${id}`, jobData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            alert("Job updated successfully!");
+            toast.success("Job updated successfully!");
             navigate("/dashboard/recruiter");
         } catch (error) {
             console.error("Error updating job:", error);
-            alert(error?.response?.data?.message || "Failed to update job");
+            toast.error(error?.response?.data?.message || "Failed to update job");
         } finally {
             setSaving(false);
         }

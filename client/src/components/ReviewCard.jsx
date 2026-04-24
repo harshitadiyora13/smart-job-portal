@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Star, ThumbsUp, MessageSquare, User, Calendar, Flag, Edit, Trash2 } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showActions = true }) => {
     const [helpful, setHelpful] = useState(review.helpful || false);
@@ -79,10 +80,10 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                 await axios.post(`http://localhost:5000/v1/api/reviews/${review._id}/report`, { reason: 'other' }, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                alert('Review reported successfully');
+                toast.success('Review reported successfully');
             } catch (error) {
                 console.error('Error reporting review:', error);
-                alert(error.response?.data?.message || 'Failed to report review');
+                toast.error(error.response?.data?.message || 'Failed to report review');
             }
         }
     };
@@ -104,10 +105,10 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                 onReviewUpdate(review._id, { companyResponse: savedResponse });
             }
             setIsResponding(false);
-            alert('Response posted successfully');
+            toast.success('Response posted successfully');
         } catch (error) {
             console.error('Error posting response:', error);
-            alert('Failed to post response');
+            toast.error('Failed to post response');
         }
     };
 
@@ -123,10 +124,10 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
 
             onReviewUpdate(review._id, { content: editContent });
             setIsEditing(false);
-            alert('Review updated successfully');
+            toast.success('Review updated successfully');
         } catch (error) {
             console.error('Error updating review:', error);
-            alert('Failed to update review');
+            toast.error('Failed to update review');
         }
     };
 
@@ -139,10 +140,10 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                 });
 
                 onReviewDelete(review._id);
-                alert('Review deleted successfully');
+                toast.success('Review deleted successfully');
             } catch (error) {
                 console.error('Error deleting review:', error);
-                alert('Failed to delete review');
+                toast.error('Failed to delete review');
             }
         }
     };

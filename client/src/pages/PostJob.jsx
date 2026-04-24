@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send, Briefcase, MapPin, AlignLeft, DollarSign, FileText, Users, Clock } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 const PostJob = () => {
     const navigate = useNavigate();
@@ -122,7 +123,7 @@ const PostJob = () => {
 
         // Validate form before submission
         if (!validateForm()) {
-            alert("Please fix the highlighted errors before submitting.");
+            toast.error("Please fix the highlighted errors before submitting.");
             return;
         }
 
@@ -132,14 +133,14 @@ const PostJob = () => {
 
             const companyName = companyProfile?.companyName || companyProfile?.companyProfile?.companyName;
             if (!companyName) {
-                alert("Company name is missing. Please update your Company Profile before posting a job.");
+                toast.error("Company name is missing. Please update your Company Profile before posting a job.");
                 setLoading(false);
                 return;
             }
 
             const isOtherCategory = String(formData.categoryId) === 'other';
             if (isOtherCategory && !customCategoryName.trim()) {
-                alert("Please enter a category name");
+                toast.error("Please enter a category name");
                 setLoading(false);
                 return;
             }
@@ -154,12 +155,12 @@ const PostJob = () => {
             await axios.post("http://localhost:5000/v1/api/jobs/create", jobData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            alert("Job posted successfully!");
+            toast.success("Job posted successfully!");
             navigate("/dashboard/recruiter");
 
         } catch (error) {
             console.error(error);
-            alert(error.response?.data?.message || "Failed to post job");
+            toast.error(error.response?.data?.message || "Failed to post job");
         } finally {
             setLoading(false);
         }

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from 'react-hot-toast';
 import { ArrowLeft, Bookmark, Briefcase, MapPin, Send } from "lucide-react";
 
 const SavedJobs = () => {
@@ -19,7 +20,7 @@ const SavedJobs = () => {
             setJobs(res.data?.savedJobs || []);
         } catch (error) {
             console.error("Error fetching saved jobs:", error);
-            alert(error?.response?.data?.message || "Failed to load saved jobs");
+            toast.error(error?.response?.data?.message || "Failed to load saved jobs");
         } finally {
             setLoading(false);
         }
@@ -42,7 +43,7 @@ const SavedJobs = () => {
             setJobs((prev) => prev.filter((j) => j._id !== jobId));
         } catch (error) {
             console.error("Error unsaving job:", error);
-            alert(error?.response?.data?.message || "Failed to unsave job");
+            toast.error(error?.response?.data?.message || "Failed to unsave job");
         }
     };
 

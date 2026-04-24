@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from 'react-hot-toast';
 import { ArrowLeft, Bell, Check, Trash2, Calendar, UserCheck, Briefcase } from "lucide-react";
 
 const Notifications = () => {
@@ -18,7 +19,7 @@ const Notifications = () => {
                 setNotifications(res.data || []);
             } catch (error) {
                 console.error("Error fetching notifications:", error);
-                alert(error?.response?.data?.message || "Failed to fetch notifications");
+                toast.error(error?.response?.data?.message || "Failed to fetch notifications");
             } finally {
                 setLoading(false);
             }
@@ -50,7 +51,7 @@ const Notifications = () => {
             setNotifications((prev) => prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n)));
         } catch (error) {
             console.error("Error marking notification as read:", error);
-            alert(error?.response?.data?.message || "Failed to mark as read");
+            toast.error(error?.response?.data?.message || "Failed to mark as read");
         }
     };
 
@@ -65,7 +66,7 @@ const Notifications = () => {
             setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
         } catch (error) {
             console.error("Error deleting notification:", error);
-            alert(error?.response?.data?.message || "Failed to delete notification");
+            toast.error(error?.response?.data?.message || "Failed to delete notification");
         }
     };
 
@@ -78,7 +79,7 @@ const Notifications = () => {
             setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
         } catch (error) {
             console.error("Error marking all notifications as read:", error);
-            alert(error?.response?.data?.message || "Failed to mark all as read");
+            toast.error(error?.response?.data?.message || "Failed to mark all as read");
         }
     };
 

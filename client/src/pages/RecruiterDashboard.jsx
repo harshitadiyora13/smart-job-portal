@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from 'react-hot-toast';
 import { PlusCircle, LogOut, Briefcase, Users, Calendar, Eye, Edit, Trash2, Building2, MoreVertical, Bell } from "lucide-react";
+import DarkModeToggle from "../components/DarkModeToggle";
 
 const RecruiterDashboard = () => {
     const navigate = useNavigate();
@@ -165,14 +167,14 @@ const RecruiterDashboard = () => {
         try {
             const scheduledAt = new Date(`${interviewForm.date}T${interviewForm.time}`);
             if (Number.isNaN(scheduledAt.getTime()) || scheduledAt.getTime() < Date.now()) {
-                alert('Interview cannot be scheduled in the past');
+                toast.error('Interview cannot be scheduled in the past');
                 return;
             }
 
             // Time validation: Only allow between 9:00 AM and 5:00 PM
             const hours = scheduledAt.getHours();
             if (hours < 9 || hours >= 17) {
-                alert('Interviews can only be scheduled between 9:00 AM and 5:00 PM');
+                toast.error('Interviews can only be scheduled between 9:00 AM and 5:00 PM');
                 return;
             }
 
@@ -180,7 +182,7 @@ const RecruiterDashboard = () => {
             const response = await axios.post("http://localhost:5000/v1/api/interviews/schedule", interviewForm, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            alert("Interview scheduled successfully!");
+            toast.success("Interview scheduled successfully!");
             setShowInterviewModal(false);
             setInterviewForm({
                 jobId: '',
@@ -194,7 +196,7 @@ const RecruiterDashboard = () => {
         } catch (error) {
             console.error("Error scheduling interview:", error);
             const errorMessage = error.response?.data?.message || "Failed to schedule interview";
-            alert(errorMessage);
+            toast.error(errorMessage);
         }
     };
 
@@ -205,11 +207,11 @@ const RecruiterDashboard = () => {
                 await axios.delete(`http://localhost:5000/v1/api/interviews/${interviewId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                alert("Interview cancelled successfully!");
+                toast.success("Interview cancelled successfully!");
                 fetchInterviews();
             } catch (error) {
                 console.error("Error cancelling interview:", error);
-                alert("Failed to cancel interview");
+                toast.error("Failed to cancel interview");
             }
         }
     };
@@ -228,13 +230,13 @@ const RecruiterDashboard = () => {
                     message += `\n\nAlso deleted:\n- ${deletedInterviews} interview(s)\n- ${deletedApplications} application(s)\n- ${deletedNotifications} notification(s)`;
                 }
 
-                alert(message);
+                toast.success(message);
                 fetchMyJobs();
                 fetchInterviews(); // Refresh interviews list too
             } catch (error) {
                 console.error("Error deleting job:", error);
                 const errorMessage = error.response?.data?.message || "Failed to delete job";
-                alert(errorMessage);
+                toast.error(errorMessage);
             }
         }
     };
@@ -254,6 +256,7 @@ const RecruiterDashboard = () => {
                         <p className="text-muted mb-0">Manage your job listings and track applicants.</p>
                     </div>
                     <div className="d-flex gap-2">
+                        <DarkModeToggle />
                         <div className="dropdown">
                             <button
                                 className="btn btn-outline-primary d-flex align-items-center justify-content-center"

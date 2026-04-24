@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Briefcase, MapPin, Calendar, Send, Users, ExternalLink } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 import ResumeUploadModal from "../components/ResumeUploadModal";
 
 const JobDetails = () => {
@@ -36,9 +37,23 @@ const JobDetails = () => {
 
     useEffect(() => {
         fetchJobDetails();
-        // Load user data on component mount
+        // Load user data from localStorage first
         const userData = JSON.parse(localStorage.getItem("user"));
         setUser(userData);
+
+        // Then fetch fresh user data from backend to sync resume status
+        const token = localStorage.getItem("token");
+        if (token) {
+            axios.get('http://localhost:5000/v1/api/users/profile', {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(response => {
+                setUser(response.data);
+                // Update localStorage with fresh data
+                localStorage.setItem("user", JSON.stringify(response.data));
+            }).catch(err => {
+                console.error('Error fetching fresh user data:', err);
+            });
+        }
     }, [id]);
 
     // Add effect to update user when localStorage changes
@@ -120,7 +135,7 @@ const JobDetails = () => {
         }
 
         if (currentUser?.role !== "jobseeker") {
-            alert("Only jobseekers can apply for jobs");
+            toast.error("Only jobseekers can apply for jobs");
             return;
         }
 
@@ -140,10 +155,10 @@ const JobDetails = () => {
             });
 
             console.log("Application response:", response.data);
-            alert("Application submitted successfully!");
+            toast.success("Application submitted successfully!");
         } catch (error) {
             console.error("Error applying:", error.response?.data || error.message);
-            alert(error.response?.data?.message || "Failed to apply for job");
+            toast.error(error.response?.data?.message || "Failed to apply for job");
         } finally {
             setApplying(false);
         }
@@ -210,11 +225,11 @@ const JobDetails = () => {
             console.error('Error status:', error.response?.status);
 
             if (error.response?.status === 404) {
-                alert('Server not running or endpoint not found. Please start the server.');
+                toast.error('Server not running or endpoint not found. Please start the server.');
             } else if (error.response?.status === 500) {
-                alert('Server error. Check server logs for details.');
+                toast.error('Server error. Check server logs for details.');
             } else {
-                alert(error.response?.data?.message || 'Failed to upload resume');
+                toast.error(error.response?.data?.message || 'Failed to upload resume');
             }
             setShowResumeModal(false); // Close modal even on error
         } finally {

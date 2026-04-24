@@ -4,6 +4,7 @@ import { UserPlus, Mail, Lock, User, ArrowRight, Briefcase, Building } from "luc
 import axios from "axios";
 import toast from "react-hot-toast";
 import OTPVerification from "../components/OTPVerification";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,22 @@ const Register = () => {
   const handleVerificationSuccess = (data) => {
     toast.success("Account verified successfully!");
     navigate("/dashboard/jobseeker");
+  };
+
+  // Handle Google auth success
+  const handleGoogleAuthSuccess = (data) => {
+    toast.success("Registration successful!");
+
+    // Store auth data
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // Redirect based on role
+    if (data.user.role === "recruiter") {
+      navigate("/dashboard/recruiter");
+    } else {
+      navigate("/dashboard/jobseeker");
+    }
   };
 
   // Update form state on input change
@@ -186,6 +203,15 @@ const Register = () => {
                     )}
                   </button>
                 </form>
+
+                {/* --- GOOGLE SIGN IN --- */}
+                <div className="mt-4">
+                  <GoogleSignInButton
+                    onSuccess={handleGoogleAuthSuccess}
+                    role={formData.role}
+                    buttonText="Sign up with Google"
+                  />
+                </div>
 
                 {/* --- DIVIDER --- */}
                 <div className="d-flex align-items-center my-5">

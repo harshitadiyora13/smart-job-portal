@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Star, Send, Briefcase, Calendar, User, ChevronDown } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
     const [loading, setLoading] = useState(false);
@@ -90,7 +91,7 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            alert('Review submitted successfully!');
+            toast.success('Review submitted successfully!');
             onReviewSubmitted(response.data);
 
             // Reset form
@@ -117,7 +118,7 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
         } catch (error) {
             console.error('Error submitting review:', error);
             const errorMessage = error.response?.data?.message || error.message || 'Failed to submit review';
-            alert(`Error: ${errorMessage}`);
+            toast.error(`Error: ${errorMessage}`);
         } finally {
             setLoading(false);
         }

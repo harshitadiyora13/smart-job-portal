@@ -359,15 +359,23 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
+        // Check if user signed up with Google (no password login allowed)
+        if (user.authProvider === 'google') {
+            return res.status(400).json({
+                message: 'This account uses Google Sign-In. Please click "Continue with Google" to login.'
+            });
+        }
+
         // Compare password - try plain text first, then bcrypt
         let isMatch = false;
 
         if (user.password === password) {
             isMatch = true;
-        } else {
+        } else if (user.password) {
             const isMatchBcrypt = await bcrypt.compare(password, user.password);
             isMatch = isMatchBcrypt;
         }
+
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }

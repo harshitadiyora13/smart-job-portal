@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, User, Mail, Phone, MapPin, Briefcase, GraduationCap, Award, Save, Edit2, Plus, X, Upload, FileText } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -111,11 +112,11 @@ const Profile = () => {
             const updatedUser = { ...user, name: profile.name };
             localStorage.setItem("user", JSON.stringify(updatedUser));
 
-            alert("Profile updated successfully!");
+            toast.success("Profile updated successfully!");
             setEditing(false);
         } catch (error) {
             console.error("Error saving profile:", error.response?.data || error.message);
-            alert(`Failed to update profile: ${error.response?.data?.message || error.message}`);
+            toast.error(`Failed to update profile: ${error.response?.data?.message || error.message}`);
         } finally {
             setSaving(false);
         }
@@ -181,12 +182,12 @@ const Profile = () => {
         const maxSize = 5 * 1024 * 1024; // 5MB
 
         if (!allowedTypes.includes(file.type)) {
-            alert('Invalid file type. Only PDF, DOC, and DOCX files are allowed.');
+            toast.error('Invalid file type. Only PDF, DOC, and DOCX files are allowed.');
             return;
         }
 
         if (file.size > maxSize) {
-            alert('File size exceeds 5MB limit.');
+            toast.error('File size exceeds 5MB limit.');
             return;
         }
 
@@ -212,10 +213,17 @@ const Profile = () => {
                 resume: response.data.resumeUrl
             });
 
-            alert('Resume uploaded successfully!');
+            // Update localStorage user data with new resume
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user) {
+                user.resume = response.data.resumeUrl;
+                localStorage.setItem("user", JSON.stringify(user));
+            }
+
+            toast.success('Resume uploaded successfully!');
         } catch (error) {
             console.error('Error uploading resume:', error);
-            alert('Failed to upload resume');
+            toast.error('Failed to upload resume');
         } finally {
             setUploading(false);
         }
@@ -223,7 +231,7 @@ const Profile = () => {
 
     const deleteResume = async () => {
         if (!profile.resume) {
-            alert('No resume to delete');
+            toast.error('No resume to delete');
             return;
         }
 
@@ -249,10 +257,10 @@ const Profile = () => {
             user.resume = "";
             localStorage.setItem("user", JSON.stringify(user));
 
-            alert('Resume deleted successfully!');
+            toast.success('Resume deleted successfully!');
         } catch (error) {
             console.error('Error deleting resume:', error);
-            alert('Failed to delete resume');
+            toast.error('Failed to delete resume');
         }
     };
 

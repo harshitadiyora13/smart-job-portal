@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Upload, Cloud, ArrowRight, ArrowLeft, Check, Bold, Italic, List, ListOrdered } from 'lucide-react';
+import { Upload, Cloud, ArrowRight, ArrowLeft, Check, Bold, Italic, List, ListOrdered, ExternalLink } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import './CompanyOnboarding.css';
 
 const CompanyOnboarding = () => {
@@ -11,7 +12,16 @@ const CompanyOnboarding = () => {
     const [uploading, setUploading] = useState(false);
     const [aboutUsText, setAboutUsText] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const [recruiterId, setRecruiterId] = useState(null);
     const aboutUsRef = useRef(null);
+
+    // Get current user on mount
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            setRecruiterId(user._id);
+        }
+    }, []);
 
     const [formData, setFormData] = useState({
         // Company Info
@@ -266,13 +276,13 @@ const CompanyOnboarding = () => {
 
         // Validate file size
         if (file.size > 5 * 1024 * 1024) {
-            alert('File size must be less than 5MB');
+            toast.error('File size must be less than 5MB');
             return;
         }
 
         // Validate file type
         if (!file.type.startsWith('image/')) {
-            alert('Please upload an image file');
+            toast.error('Please upload an image file');
             return;
         }
 
@@ -297,7 +307,7 @@ const CompanyOnboarding = () => {
 
         } catch (error) {
             console.error('Upload error:', error);
-            alert('Failed to upload image');
+            toast.error('Failed to upload image');
         } finally {
             setUploading(false);
         }
@@ -389,7 +399,7 @@ const CompanyOnboarding = () => {
             });
             setTouched(prev => ({ ...prev, ...newTouched }));
 
-            alert('Please fix all errors before submitting the form.');
+            toast.error('Please fix all errors before submitting the form.');
             return;
         }
 
@@ -402,13 +412,13 @@ const CompanyOnboarding = () => {
                 response = await axios.put('http://localhost:5000/v1/api/recruiters/company-profile', formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                alert('Company profile updated successfully!');
+                toast.success('Company profile updated successfully!');
             } else {
                 // Create new profile
                 response = await axios.post('http://localhost:5000/v1/api/recruiters/company-profile', formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                alert('Company profile created successfully!');
+                toast.success('Company profile created successfully!');
             }
 
             // Clear form and redirect to dashboard
@@ -433,11 +443,9 @@ const CompanyOnboarding = () => {
                 postalCode: ''
             });
 
-            // Redirect to recruiter dashboard
-            window.location.href = '/dashboard/recruiter';
         } catch (error) {
             console.error('Submit error:', error);
-            alert(`Failed to ${editMode ? 'update' : 'save'} company profile`);
+            toast.error(`Failed to ${editMode ? 'update' : 'save'} company profile`);
         }
     };
 
@@ -737,11 +745,20 @@ const CompanyOnboarding = () => {
         <div className="container mt-5">
             <div className="onboarding-container">
                 {/* Page Title */}
-                <div className="text-center mb-4">
-                    <h2 className="fw-bold text-primary">
+                <div className="mb-4">
+                    {editMode && recruiterId && (
+                        <button
+                            className="btn btn-outline-secondary btn-sm mb-3"
+                            onClick={() => navigate(`/company/${recruiterId}`)}
+                        >
+                            <ArrowLeft size={16} className="me-2" />
+                            Back to Profile
+                        </button>
+                    )}
+                    <h2 className="fw-bold text-primary text-center">
                         {editMode ? 'Edit Company Profile' : 'Company Profile Onboarding'}
                     </h2>
-                    <p className="text-muted">
+                    <p className="text-muted text-center">
                         {editMode ? 'Update your company information' : 'Complete your company profile to attract top talent'}
                     </p>
                 </div>
@@ -781,11 +798,13 @@ const CompanyOnboarding = () => {
 
                 {/* Navigation Buttons */}
                 <div className="navigation-buttons">
-                    {currentStep > 1 && (
+                    {currentStep > 1 ? (
                         <button className="btn btn-outline-secondary" onClick={handlePrevious}>
                             <ArrowLeft size={16} className="me-2" />
                             Previous
                         </button>
+                    ) : (
+                        <div></div>
                     )}
                     <button
                         className="btn btn-primary ms-auto"

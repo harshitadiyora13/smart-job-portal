@@ -43,7 +43,7 @@ const CompanyProfile = () => {
     };
 
     const handleBack = () => {
-        navigate(-1); // Go back to previous page
+        navigate('/dashboard/recruiter'); // Go back to recruiter dashboard
     };
 
     const handleEditProfile = () => {

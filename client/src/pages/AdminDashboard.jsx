@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -61,7 +62,7 @@ const AdminDashboard = () => {
       });
       setPendingJobs(res.data.jobs || []);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to load pending jobs');
+      toast.error(err.response?.data?.message || 'Failed to load pending jobs');
     } finally {
       setPendingJobsLoading(false);
     }
@@ -80,7 +81,7 @@ const AdminDashboard = () => {
       fetchPendingJobs();
       fetchStats();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update job');
+      toast.error(err.response?.data?.message || 'Failed to update job');
     }
   };
 
@@ -92,7 +93,7 @@ const AdminDashboard = () => {
       });
       setCategories(res.data.categories || []);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to load categories');
+      toast.error(err.response?.data?.message || 'Failed to load categories');
     } finally {
       setCategoriesLoading(false);
     }
@@ -109,7 +110,7 @@ const AdminDashboard = () => {
       setCategoryForm({ name: '', icon: '' });
       fetchCategories();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to create category');
+      toast.error(err.response?.data?.message || 'Failed to create category');
     }
   };
 
@@ -122,7 +123,7 @@ const AdminDashboard = () => {
       });
       fetchCategories();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete category');
+      toast.error(err.response?.data?.message || 'Failed to delete category');
     }
   };
 
@@ -158,7 +159,7 @@ const AdminDashboard = () => {
       });
       setSelectedUser(res.data.user);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to load user');
+      toast.error(err.response?.data?.message || 'Failed to load user');
     } finally {
       setSelectedUserLoading(false);
     }
@@ -176,9 +177,9 @@ const AdminDashboard = () => {
         setSelectedUser(null);
       }
       fetchUsers();
-      alert('User deleted');
+      toast.success('User deleted');
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete user');
+      toast.error(err.response?.data?.message || 'Failed to delete user');
     }
   };
 

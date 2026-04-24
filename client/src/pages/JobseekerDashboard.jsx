@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Briefcase, Send, LogOut, Filter, FileText, User, Bookmark, MoreVertical, Bell } from "lucide-react";
 import axios from "axios";
+import toast from 'react-hot-toast';
 import JobFilters from "../components/JobFilters";
+import DarkModeToggle from "../components/DarkModeToggle";
 
 const SeekerDashboard = () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -18,7 +20,6 @@ const SeekerDashboard = () => {
     const [savingJobId, setSavingJobId] = useState(null);
     const [searchQuery, setSearchQuery] = useState(""); // For Search Logic
     const [filters, setFilters] = useState({
-        location: '',
         jobType: '',
         company: '',
         postedWithin: ''
@@ -102,7 +103,7 @@ const SeekerDashboard = () => {
             });
         } catch (error) {
             console.error("Error toggling saved job:", error);
-            alert(error?.response?.data?.message || "Failed to save job");
+            toast.error(error?.response?.data?.message || "Failed to save job");
         } finally {
             setSavingJobId(null);
         }
@@ -113,12 +114,7 @@ const SeekerDashboard = () => {
         // Text search
         const matchesSearch = !searchQuery ||
             job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            job.location.toLowerCase().includes(searchQuery.toLowerCase());
-
-        // Location filter
-        const matchesLocation = !filters.location ||
-            job.location.toLowerCase().includes(filters.location.toLowerCase());
+            job.company.toLowerCase().includes(searchQuery.toLowerCase());
 
         // Job type filter
         const matchesJobType = !filters.jobType ||
@@ -137,8 +133,7 @@ const SeekerDashboard = () => {
                 return daysDiff <= parseInt(filters.postedWithin);
             })();
 
-        return matchesSearch && matchesLocation && matchesJobType && matchesCompany &&
-            matchesPostedDate;
+        return matchesSearch && matchesJobType && matchesCompany && matchesPostedDate;
     });
 
     const handleFiltersChange = (newFilters) => {
@@ -147,7 +142,6 @@ const SeekerDashboard = () => {
 
     const handleClearFilters = () => {
         setFilters({
-            location: '',
             jobType: '',
             company: '',
             postedWithin: ''
@@ -175,6 +169,7 @@ const SeekerDashboard = () => {
                             <div className="col-md-6">
 
                                 <div className="d-flex justify-content-end align-items-center gap-2 flex-wrap">
+                                    <DarkModeToggle />
                                     <div className="dropdown position-relative" style={{ zIndex: 999 }}>
                                         <button
                                             className="btn btn-outline-primary d-flex align-items-center justify-content-center"
