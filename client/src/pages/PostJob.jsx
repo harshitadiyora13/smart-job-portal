@@ -296,7 +296,10 @@ const PostJob = () => {
                                     <div className="col-12">
                                         <button
                                             type="submit" disabled={loading}
-                                            className="btn bg-primary text-white w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
+                                            className="btn text-white w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 border-0"
+                                            style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                            onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                            onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                         >
                                             {loading ? (
                                                 <span className="spinner-border spinner-border-sm"></span>

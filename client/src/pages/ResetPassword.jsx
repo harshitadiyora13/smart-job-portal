@@ -41,7 +41,7 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (formData.password !== formData.confirmPassword) {
             toast.error('Passwords do not match');
             return;
@@ -58,15 +58,15 @@ const ResetPassword = () => {
             await axios.post(`http://localhost:5000/v1/api/auth/reset-password/${token}`, {
                 password: formData.password
             });
-            
+
             setIsSuccess(true);
             toast.success('Password reset successfully!');
-            
+
             // Redirect to login after 3 seconds
             setTimeout(() => {
                 navigate('/login');
             }, 3000);
-            
+
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to reset password');
         } finally {
@@ -107,12 +107,12 @@ const ResetPassword = () => {
                 <div className="w-100" style={{ maxWidth: 480 }}>
                     <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
                         <div className="card-body p-4 p-md-5 text-center">
-                            <div 
+                            <div
                                 className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                                style={{ 
-                                    width: "64px", 
-                                    height: "64px", 
-                                    background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" 
+                                style={{
+                                    width: "64px",
+                                    height: "64px",
+                                    background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)"
                                 }}
                             >
                                 <XCircle size={28} className="text-white" />
@@ -149,12 +149,12 @@ const ResetPassword = () => {
                 <div className="w-100" style={{ maxWidth: 480 }}>
                     <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
                         <div className="card-body p-4 p-md-5 text-center">
-                            <div 
+                            <div
                                 className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                                style={{ 
-                                    width: "64px", 
-                                    height: "64px", 
-                                    background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" 
+                                style={{
+                                    width: "64px",
+                                    height: "64px",
+                                    background: "linear-gradient(135deg, #10b981 0%, #059669 100%)"
                                 }}
                             >
                                 <CheckCircle size={28} className="text-white" />
@@ -185,12 +185,12 @@ const ResetPassword = () => {
             <div className="w-100" style={{ maxWidth: 500 }}>
                 {/* Header */}
                 <div className="text-center mb-5">
-                    <div 
+                    <div
                         className="d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
-                        style={{ 
-                            width: "80px", 
-                            height: "80px", 
-                            background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)" 
+                        style={{
+                            width: "80px",
+                            height: "80px",
+                            background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)"
                         }}
                     >
                         <Lock size={36} className="text-white" />
@@ -281,13 +281,16 @@ const ResetPassword = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn btn-primary w-100 py-3 fw-semibold rounded-3"
+                        className="btn btn-primary w-100 py-3 fw-semibold rounded-3 text-white border-0"
                         style={{
-                            background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)",
+                            background: "linear-gradient(to right, #2F80ED, #1C5ED6)",
                             border: "none",
                             fontSize: "16px",
                             padding: "14px",
+                            transition: "all 0.3s ease"
                         }}
+                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                     >
                         {loading ? (
                             <div className="d-flex align-items-center justify-content-center">
@@ -304,8 +307,8 @@ const ResetPassword = () => {
 
                 {/* Back to Login */}
                 <div className="text-center mt-4">
-                    <Link 
-                        to="/login" 
+                    <Link
+                        to="/login"
                         className="text-decoration-none fw-semibold"
                         style={{ color: "#3b82f6", fontSize: "16px" }}
                     >

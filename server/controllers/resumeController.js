@@ -43,7 +43,7 @@ const upload = multer({
 const uploadResume = async (req, res) => {
     try {
         const user = req.user;
-        
+
         // Check if user is a jobseeker
         if (user.role !== 'jobseeker') {
             return res.status(403).json({ message: 'Only jobseekers can upload resumes' });
@@ -53,18 +53,26 @@ const uploadResume = async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        // Delete old resume if exists
-        if (user.resume && fs.existsSync(user.resume)) {
-            fs.unlinkSync(user.resume);
+        // Create URL path for frontend access (starts with /uploads/)
+        const resumeUrl = `/uploads/resumes/${req.file.filename}`;
+
+        // Delete old resume file if exists (extract file path from URL)
+        if (user.resume) {
+            const oldFilePath = user.resume.startsWith('/uploads/')
+                ? path.join(__dirname, '../', user.resume)
+                : user.resume;
+            if (fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath);
+            }
         }
 
-        // Update user with new resume path
-        user.resume = req.file.path;
+        // Update user with new resume URL path
+        user.resume = resumeUrl;
         await user.save();
 
         res.status(200).json({
             message: 'Resume uploaded successfully',
-            resumePath: req.file.path,
+            resumeUrl: resumeUrl,
             fileName: req.file.filename
         });
 
@@ -80,7 +88,7 @@ const uploadResume = async (req, res) => {
 const getResume = async (req, res) => {
     try {
         const user = req.user;
-        
+
         if (!user.resume) {
             return res.status(404).json({ message: 'No resume found' });
         }
@@ -102,7 +110,7 @@ const getResume = async (req, res) => {
 const deleteResume = async (req, res) => {
     try {
         const user = req.user;
-        
+
         // Check if user is a jobseeker
         if (user.role !== 'jobseeker') {
             return res.status(403).json({ message: 'Only jobseekers can delete resumes' });

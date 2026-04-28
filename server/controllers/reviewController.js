@@ -190,7 +190,7 @@ exports.getCompanyReviewStats = async (req, res) => {
 exports.updateReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const { content } = req.body;
+        const { content, overallRating, workLifeBalance, salaryBenefits, careerGrowth, companyCulture, management, workEnvironment } = req.body;
 
         const review = await Review.findById(reviewId);
 
@@ -208,7 +208,7 @@ exports.updateReview = async (req, res) => {
         }
 
         // Update content
-        if (content) {
+        if (content !== undefined) {
             if (content.length < 50) {
                 return res.status(400).json({
                     message: 'Review content must be at least 50 characters'
@@ -221,6 +221,15 @@ exports.updateReview = async (req, res) => {
             }
             review.content = content;
         }
+
+        // Update ratings if provided
+        if (overallRating !== undefined) review.overallRating = overallRating;
+        if (workLifeBalance !== undefined) review.workLifeBalance = workLifeBalance;
+        if (salaryBenefits !== undefined) review.salaryBenefits = salaryBenefits;
+        if (careerGrowth !== undefined) review.careerGrowth = careerGrowth;
+        if (companyCulture !== undefined) review.companyCulture = companyCulture;
+        if (management !== undefined) review.management = management;
+        if (workEnvironment !== undefined) review.workEnvironment = workEnvironment;
 
         await review.save();
         await review.populate('userId', 'name email');

@@ -25,7 +25,7 @@ const ResendVerification = () => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to send verification email. Please try again."
+        "Failed to send verification email. Please try again."
       );
     } finally {
       setLoading(false);
@@ -81,7 +81,10 @@ const ResendVerification = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary w-100 py-2 fw-semibold"
+                  className="btn btn-primary w-100 py-2 fw-semibold text-white border-0"
+                  style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                  onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                  onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                 >
                   {loading ? (
                     <span className="spinner-border spinner-border-sm me-2"></span>
@@ -125,7 +128,7 @@ const ResendVerification = () => {
                   >
                     Send Again
                   </button>
-                  <Link to="/login" className="btn btn-primary">
+                  <Link to="/login" className="btn btn-primary text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                     Go to Login
                   </Link>
                 </div>

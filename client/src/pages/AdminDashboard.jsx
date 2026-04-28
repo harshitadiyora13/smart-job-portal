@@ -221,7 +221,7 @@ const AdminDashboard = () => {
 
   const sidebarBtn = (key) => {
     const active = key === activeSection;
-    return `btn w-100 text-start d-flex align-items-center gap-2 ${active ? 'btn-light' : 'btn-link'} ${active ? 'text-primary' : 'text-white'}`;
+    return `btn w-100 text-start d-flex align-items-center gap-2 ${active ? 'btn-light text-primary' : 'text-white'}`;
   };
 
   const actionBtn = 'btn btn-sm btn-outline-primary';

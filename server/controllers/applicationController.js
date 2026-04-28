@@ -60,11 +60,20 @@ const applyToJob = async (req, res) => {
             return res.status(400).json({ message: "You have already applied for this job" });
         }
 
-        // 3. Create application (For now, we use a placeholder for resume URL)
+        // 3. Get user's resume URL from the user data
+        const User = require('../models/User.js');
+        const user = await User.findById(userId);
+        const resumeUrl = user?.resume || req.body.resume || null;
+
+        if (!resumeUrl) {
+            return res.status(400).json({ message: "No resume found. Please upload a resume first." });
+        }
+
+        // 4. Create application with the actual resume URL
         const application = await Application.create({
             job: jobId,
             applicant: userId,
-            resume: req.body.resume || "placeholder_link.pdf"
+            resume: resumeUrl
         });
 
         // Create notification for recruiter

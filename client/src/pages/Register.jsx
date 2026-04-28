@@ -79,7 +79,7 @@ const Register = () => {
                     <UserPlus size={36} />
                   </div>
                   <h2 className="fw-bold mb-3">Create Account</h2>
-                  <p className="text-muted mb-0">Start your career journey with JobFlow</p>
+                  <p className="text-muted mb-0">Start your career journey with SmartHire</p>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -186,7 +186,13 @@ const Register = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="btn btn-primary w-100 py-3 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2"
+                    className="btn w-100 py-3 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-2 text-white border-0"
+                    style={{
+                      background: 'linear-gradient(to right, #2F80ED, #1C5ED6)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                    onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                   >
                     {loading ? (
                       <>

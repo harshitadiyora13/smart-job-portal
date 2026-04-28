@@ -223,9 +223,12 @@ const ForgotPassword = () => {
                                         disabled={loading}
                                         className="btn btn-primary w-100 py-3 fw-semibold rounded-3"
                                         style={{
-                                            background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)",
-                                            border: "none"
+                                            background: "linear-gradient(to right, #2F80ED, #1C5ED6)",
+                                            border: "none",
+                                            transition: "all 0.3s ease"
                                         }}
+                                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                     >
                                         {loading ? (
                                             <div className="d-flex align-items-center justify-content-center">
@@ -308,11 +311,14 @@ const ForgotPassword = () => {
                                 <button
                                     onClick={() => handleOtpVerify()}
                                     disabled={loading || otp.join('').length !== 6}
-                                    className="btn btn-primary w-100 py-3 fw-semibold rounded-3 mb-3"
+                                    className="btn btn-primary w-100 py-3 fw-semibold rounded-3 mb-3 text-white border-0"
                                     style={{
-                                        background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-                                        border: "none"
+                                        background: "linear-gradient(to right, #2F80ED, #1C5ED6)",
+                                        border: "none",
+                                        transition: "all 0.3s ease"
                                     }}
+                                    onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                    onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                 >
                                     {loading ? (
                                         <div className="d-flex align-items-center justify-content-center">
@@ -426,11 +432,14 @@ const ForgotPassword = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="btn btn-primary w-100 py-3 fw-semibold rounded-3"
+                                        className="btn btn-primary w-100 py-3 fw-semibold rounded-3 text-white border-0"
                                         style={{
-                                            background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)",
-                                            border: "none"
+                                            background: "linear-gradient(to right, #2F80ED, #1C5ED6)",
+                                            border: "none",
+                                            transition: "all 0.3s ease"
                                         }}
+                                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                     >
                                         {loading ? (
                                             <div className="d-flex align-items-center justify-content-center">
@@ -464,7 +473,13 @@ const ForgotPassword = () => {
                                 </p>
                                 <button
                                     onClick={() => navigate('/login')}
-                                    className="btn btn-primary w-100"
+                                    className="btn btn-primary w-100 text-white border-0"
+                                    style={{
+                                        background: "linear-gradient(to right, #2F80ED, #1C5ED6)",
+                                        transition: "all 0.3s ease"
+                                    }}
+                                    onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                    onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                 >
                                     Go to Login
                                 </button>

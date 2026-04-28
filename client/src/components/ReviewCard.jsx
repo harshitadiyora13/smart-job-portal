@@ -10,6 +10,15 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
     const [response, setResponse] = useState(review.companyResponse || '');
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(review.content);
+    const [editRatings, setEditRatings] = useState({
+        overallRating: review.overallRating || 0,
+        workLifeBalance: review.workLifeBalance || 0,
+        salaryBenefits: review.salaryBenefits || 0,
+        careerGrowth: review.careerGrowth || 0,
+        companyCulture: review.companyCulture || 0,
+        management: review.management || 0,
+        workEnvironment: review.workEnvironment || 0
+    });
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -18,6 +27,70 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
             month: 'long',
             day: 'numeric'
         });
+    };
+
+    // Component for editable star rating with half-star support
+    const StarInput = ({ value, onChange, size = 16 }) => {
+        const [hoverValue, setHoverValue] = useState(0);
+
+        const handleClick = (e, starValue) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const isHalf = x < rect.width / 2;
+            const newValue = isHalf ? starValue - 0.5 : starValue;
+            onChange(newValue);
+        };
+
+        const handleMouseMove = (e, starValue) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const isHalf = x < rect.width / 2;
+            setHoverValue(isHalf ? starValue - 0.5 : starValue);
+        };
+
+        return (
+            <div className="d-flex gap-1">
+                {Array.from({ length: 5 }, (_, index) => {
+                    const starValue = index + 1;
+                    const displayValue = hoverValue || value;
+                    const isFull = displayValue >= starValue;
+                    const isHalf = !isFull && displayValue >= starValue - 0.5;
+
+                    return (
+                        <button
+                            key={index}
+                            type="button"
+                            onClick={(e) => handleClick(e, starValue)}
+                            onMouseMove={(e) => handleMouseMove(e, starValue)}
+                            onMouseLeave={() => setHoverValue(0)}
+                            className="btn btn-link p-0 border-0 position-relative"
+                            style={{ lineHeight: 0, width: size, height: size }}
+                        >
+                            {/* Background empty star */}
+                            <Star
+                                size={size}
+                                className="text-muted"
+                                fill="none"
+                            />
+                            {/* Half/Full star overlay */}
+                            <div
+                                className="position-absolute top-0 start-0 overflow-hidden"
+                                style={{
+                                    width: isFull ? '100%' : isHalf ? '50%' : '0%',
+                                    height: '100%'
+                                }}
+                            >
+                                <Star
+                                    size={size}
+                                    className="text-warning"
+                                    fill="currentColor"
+                                />
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+        );
     };
 
     const renderStars = (rating) => {
@@ -117,12 +190,16 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
         try {
             const token = localStorage.getItem('token');
             await axios.put(`http://localhost:5000/v1/api/reviews/${review._id}`, {
-                content: editContent
+                content: editContent,
+                ...editRatings
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            onReviewUpdate(review._id, { content: editContent });
+            onReviewUpdate(review._id, {
+                content: editContent,
+                ...editRatings
+            });
             setIsEditing(false);
             toast.success('Review updated successfully');
         } catch (error) {
@@ -192,8 +269,17 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                     <div className="d-flex align-items-center gap-2 mb-3">
                         <span className="fw-semibold">Overall:</span>
                         <div className="d-flex align-items-center gap-1">
-                            {renderStars(review.overallRating)}
-                            <span className="ms-1 text-muted">({Number(review.overallRating).toFixed(1)})</span>
+                            {isEditing ? (
+                                <StarInput
+                                    value={editRatings.overallRating}
+                                    onChange={(val) => setEditRatings({ ...editRatings, overallRating: val })}
+                                />
+                            ) : (
+                                <>
+                                    {renderStars(review.overallRating)}
+                                    <span className="ms-1 text-muted">({Number(review.overallRating).toFixed(1)})</span>
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -202,7 +288,12 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             <div className="d-flex align-items-center gap-2 small">
                                 <span className="text-muted" style={{ minWidth: '70px' }}>Work-Life:</span>
                                 <div className="d-flex">
-                                    {renderStars(review.workLifeBalance)}
+                                    {isEditing ? (
+                                        <StarInput
+                                            value={editRatings.workLifeBalance}
+                                            onChange={(val) => setEditRatings({ ...editRatings, workLifeBalance: val })}
+                                        />
+                                    ) : renderStars(review.workLifeBalance)}
                                 </div>
                             </div>
                         </div>
@@ -210,7 +301,12 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             <div className="d-flex align-items-center gap-2 small">
                                 <span className="text-muted" style={{ minWidth: '70px' }}>Salary:</span>
                                 <div className="d-flex">
-                                    {renderStars(review.salaryBenefits)}
+                                    {isEditing ? (
+                                        <StarInput
+                                            value={editRatings.salaryBenefits}
+                                            onChange={(val) => setEditRatings({ ...editRatings, salaryBenefits: val })}
+                                        />
+                                    ) : renderStars(review.salaryBenefits)}
                                 </div>
                             </div>
                         </div>
@@ -218,7 +314,12 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             <div className="d-flex align-items-center gap-2 small">
                                 <span className="text-muted" style={{ minWidth: '70px' }}>Growth:</span>
                                 <div className="d-flex">
-                                    {renderStars(review.careerGrowth)}
+                                    {isEditing ? (
+                                        <StarInput
+                                            value={editRatings.careerGrowth}
+                                            onChange={(val) => setEditRatings({ ...editRatings, careerGrowth: val })}
+                                        />
+                                    ) : renderStars(review.careerGrowth)}
                                 </div>
                             </div>
                         </div>
@@ -226,7 +327,12 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             <div className="d-flex align-items-center gap-2 small">
                                 <span className="text-muted" style={{ minWidth: '70px' }}>Culture:</span>
                                 <div className="d-flex">
-                                    {renderStars(review.companyCulture)}
+                                    {isEditing ? (
+                                        <StarInput
+                                            value={editRatings.companyCulture}
+                                            onChange={(val) => setEditRatings({ ...editRatings, companyCulture: val })}
+                                        />
+                                    ) : renderStars(review.companyCulture)}
                                 </div>
                             </div>
                         </div>
@@ -234,7 +340,12 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             <div className="d-flex align-items-center gap-2 small">
                                 <span className="text-muted" style={{ minWidth: '70px' }}>Management:</span>
                                 <div className="d-flex">
-                                    {renderStars(review.management)}
+                                    {isEditing ? (
+                                        <StarInput
+                                            value={editRatings.management}
+                                            onChange={(val) => setEditRatings({ ...editRatings, management: val })}
+                                        />
+                                    ) : renderStars(review.management)}
                                 </div>
                             </div>
                         </div>
@@ -242,7 +353,12 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             <div className="d-flex align-items-center gap-2 small">
                                 <span className="text-muted" style={{ minWidth: '70px' }}>Environment:</span>
                                 <div className="d-flex">
-                                    {renderStars(review.workEnvironment)}
+                                    {isEditing ? (
+                                        <StarInput
+                                            value={editRatings.workEnvironment}
+                                            onChange={(val) => setEditRatings({ ...editRatings, workEnvironment: val })}
+                                        />
+                                    ) : renderStars(review.workEnvironment)}
                                 </div>
                             </div>
                         </div>

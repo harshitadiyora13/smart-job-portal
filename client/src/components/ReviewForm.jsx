@@ -164,8 +164,8 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
                             return (
                                 <div
                                     key={star}
-                                    className="position-relative"
-                                    style={{ width: 20, height: 20, cursor: 'pointer' }}
+                                    className="position-relative d-inline-flex align-items-center justify-content-center"
+                                    style={{ width: 20, height: 20, cursor: 'pointer', lineHeight: 0 }}
                                     onMouseLeave={() => handleRatingHoverLeave(category)}
                                 >
                                     {/* Base empty star */}
@@ -173,6 +173,7 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
                                         size={20}
                                         className="text-muted"
                                         fill="none"
+                                        style={{ display: 'block' }}
                                     />
                                     {/* Full star overlay */}
                                     {isFull && (

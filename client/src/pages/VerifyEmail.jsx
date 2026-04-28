@@ -69,7 +69,7 @@ const VerifyEmail = () => {
               </div>
               <h3 className="fw-bold mb-2">Email Verified</h3>
               <p className="text-muted">{message}</p>
-              <Link to="/login" className="btn btn-primary px-4">
+              <Link to="/login" className="btn btn-primary px-4 text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                 Go to Login
               </Link>
             </>
@@ -78,16 +78,12 @@ const VerifyEmail = () => {
           {status === "error" && (
             <>
               <div className="d-flex justify-content-center mb-3">
-                <div className="rounded-circle bg-danger bg-opacity-10 p-3">
-                  <XCircle className="text-danger" size={44} />
-                </div>
+                <Link to="/login" className="btn btn-primary px-4 text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>Go to Login</Link>
               </div>
               <h3 className="fw-bold mb-2">Invalid Link</h3>
               <p className="text-muted">{message}</p>
               <div className="d-flex gap-2 justify-content-center flex-wrap">
-                <Link to="/login" className="btn btn-primary px-4">
-                  Go to Login
-                </Link>
+                <Link to="/login" className="btn btn-primary px-4 text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>Go to Login</Link>
               </div>
             </>
           )}

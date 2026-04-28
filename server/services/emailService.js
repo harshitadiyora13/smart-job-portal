@@ -143,6 +143,107 @@ const emailTemplates = {
                 </div>
             </div>
         `
+    },
+
+    welcome: {
+        subject: 'Welcome to SmartHire! 🎉',
+        html: (data) => `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
+                    <h1>🎯 SmartHire</h1>
+                    <h2>Welcome to Your Career Journey!</h2>
+                </div>
+                <div style="padding: 20px; background-color: #f9f9f9;">
+                    <p>Hello ${data.name},</p>
+                    <p>Welcome to SmartHire! We're thrilled to have you join our community of job seekers and employers.</p>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <h3>Get Started:</h3>
+                        <ul>
+                            <li>Complete your profile</li>
+                            <li>Upload your resume</li>
+                            <li>Browse and apply for jobs</li>
+                            <li>Set up job alerts</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 20px 0;">
+                        <a href="${data.portalUrl}/dashboard" style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                    
+                    <p>If you have any questions, feel free to reach out to our support team.</p>
+                </div>
+                <div style="background: #333; color: white; padding: 15px; text-align: center; font-size: 12px;">
+                    <p>© 2024 SmartHire. All rights reserved.</p>
+                </div>
+            </div>
+        `
+    },
+
+    job_alert: {
+        subject: 'New Job Matches for You! 💼',
+        html: (data) => `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
+                    <h1>🎯 SmartHire</h1>
+                    <h2>New Job Opportunities</h2>
+                </div>
+                <div style="padding: 20px; background-color: #f9f9f9;">
+                    <p>Hello ${data.name},</p>
+                    <p>We found ${data.jobCount} new job(s) matching your preferences!</p>
+                    
+                    ${data.jobs.map(job => `
+                        <div style="background: white; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #667eea;">
+                            <h3 style="margin: 0 0 10px 0;">${job.title}</h3>
+                            <p style="margin: 5px 0;"><strong>Company:</strong> ${job.company}</p>
+                            <p style="margin: 5px 0;"><strong>Location:</strong> ${job.location}</p>
+                            <p style="margin: 5px 0;"><strong>Type:</strong> ${job.type}</p>
+                            ${job.salary ? `<p style="margin: 5px 0;"><strong>Salary:</strong> ${job.salary}</p>` : ''}
+                        </div>
+                    `).join('')}
+                    
+                    <div style="text-align: center; margin: 20px 0;">
+                        <a href="${data.portalUrl}/dashboard" style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                            View All Jobs
+                        </a>
+                    </div>
+                    
+                    <p>You can update your job alert preferences in your settings.</p>
+                </div>
+                <div style="background: #333; color: white; padding: 15px; text-align: center; font-size: 12px;">
+                    <p>© 2024 SmartHire. All rights reserved.</p>
+                </div>
+            </div>
+        `
+    },
+
+    password_reset: {
+        subject: 'Password Reset Request - SmartHire',
+        html: (data) => `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
+                    <h1>🎯 SmartHire</h1>
+                    <h2>Password Reset</h2>
+                </div>
+                <div style="padding: 20px; background-color: #f9f9f9;">
+                    <p>Hello ${data.name},</p>
+                    <p>You requested to reset your password. Click the button below to create a new password:</p>
+                    
+                    <div style="text-align: center; margin: 20px 0;">
+                        <a href="${data.resetUrl}" style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                            Reset Password
+                        </a>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 14px;">This link will expire in 1 hour. If you didn't request this, please ignore this email.</p>
+                </div>
+                <div style="background: #333; color: white; padding: 15px; text-align: center; font-size: 12px;">
+                    <p>© 2024 SmartHire. All rights reserved.</p>
+                </div>
+            </div>
+        `
     }
 };
 
@@ -218,8 +319,112 @@ const createNotification = async (notificationData) => {
     }
 };
 
+// Send welcome email to new user
+const sendWelcomeEmail = async (user) => {
+    try {
+        const template = emailTemplates.welcome;
+        if (!template) {
+            console.log('Welcome email template not found');
+            return false;
+        }
+
+        const emailData = {
+            name: user.name,
+            portalUrl: process.env.FRONTEND_URL || 'http://localhost:5173'
+        };
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.email,
+            subject: template.subject,
+            html: template.html(emailData)
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Welcome email sent to ${user.email}`);
+        return true;
+    } catch (error) {
+        console.error('Error sending welcome email:', error);
+        return false;
+    }
+};
+
+// Send job alert email
+const sendJobAlertEmail = async (user, jobs) => {
+    try {
+        const template = emailTemplates.job_alert;
+        if (!template) {
+            console.log('Job alert template not found');
+            return false;
+        }
+
+        const emailData = {
+            name: user.name,
+            jobCount: jobs.length,
+            jobs: jobs.map(job => ({
+                title: job.title,
+                company: job.company,
+                location: job.location,
+                type: job.type,
+                salary: job.salary
+            })),
+            portalUrl: process.env.FRONTEND_URL || 'http://localhost:5173'
+        };
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.email,
+            subject: template.subject,
+            html: template.html(emailData)
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Job alert sent to ${user.email}`);
+        return true;
+    } catch (error) {
+        console.error('Error sending job alert:', error);
+        return false;
+    }
+};
+
+// Send password reset email
+const sendPasswordResetEmail = async (user, resetToken) => {
+    try {
+        const template = emailTemplates.password_reset;
+        if (!template) {
+            console.log('Password reset template not found');
+            return false;
+        }
+
+        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+
+        const emailData = {
+            name: user.name,
+            resetUrl,
+            portalUrl: process.env.FRONTEND_URL || 'http://localhost:5173'
+        };
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.email,
+            subject: template.subject,
+            html: template.html(emailData)
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Password reset email sent to ${user.email}`);
+        return true;
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+        return false;
+    }
+};
+
 module.exports = {
     sendEmailNotification,
     createNotification,
+    sendWelcomeEmail,
+    sendJobAlertEmail,
+    sendPasswordResetEmail,
     emailTemplates
 };

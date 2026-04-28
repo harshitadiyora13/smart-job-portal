@@ -91,6 +91,21 @@ const googleAuth = async (req, res) => {
             { expiresIn: '1d' }
         );
 
+        // Send welcome email and create notification preferences for new Google users
+        try {
+            const { sendWelcomeEmail } = require('../services/emailService');
+            const { createDefaultPreferences } = require('../controllers/notificationPreferenceController');
+
+            // Send welcome email
+            await sendWelcomeEmail(user);
+
+            // Create default notification preferences
+            await createDefaultPreferences(user._id);
+        } catch (emailError) {
+            console.error('Failed to send welcome email for Google user:', emailError);
+            // Don't block login if email fails
+        }
+
         // Return user data (without password)
         const userResponse = {
             _id: user._id,

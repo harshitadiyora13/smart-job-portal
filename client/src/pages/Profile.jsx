@@ -308,7 +308,10 @@ const Profile = () => {
                             </>
                         ) : (
                             <button
-                                className="btn btn-primary d-flex align-items-center gap-2"
+                                className="btn btn-primary d-flex align-items-center gap-2 text-white border-0"
+                                style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                 onClick={() => setEditing(true)}
                             >
                                 <Edit2 size={18} /> Edit Profile
@@ -510,7 +513,7 @@ const Profile = () => {
                                                                 : profile.resume;
                                                             window.open(resumeUrl, '_blank');
                                                         } else {
-                                                            alert('No resume available');
+                                                            toast.error('No resume available');
                                                         }
                                                     }}
                                                 >
