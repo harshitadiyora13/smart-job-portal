@@ -117,9 +117,12 @@ const ResumeUploadModal = ({ isOpen, onClose, onUpload, uploading }) => {
                         </button>
                         <button
                             type="button"
-                            className="btn btn-primary"
+                            className="btn btn-primary text-white border-0"
                             onClick={handleUpload}
                             disabled={!selectedFile || uploading}
+                            style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                            onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                            onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                         >
                             {uploading ? (
                                 <>

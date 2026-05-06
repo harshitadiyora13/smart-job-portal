@@ -40,7 +40,10 @@ const CompanyOnboarding = () => {
         website: '',
         linkedin: '',
         twitter: '',
-        facebook: '',
+
+        // Custom social media
+        customSocialName: '',
+        customSocialLink: '',
 
         // Contact
         email: '',
@@ -74,7 +77,8 @@ const CompanyOnboarding = () => {
                 website: companyData.website || '',
                 linkedin: companyData.linkedin || '',
                 twitter: companyData.twitter || '',
-                facebook: companyData.facebook || '',
+                customSocialName: companyData.customSocialName || '',
+                customSocialLink: companyData.customSocialLink || '',
                 email: companyData.email || '',
                 phone: companyData.phone || '',
                 address: companyData.address || '',
@@ -135,7 +139,9 @@ const CompanyOnboarding = () => {
                 break;
 
             case 'foundedYear':
-                if (value) {
+                if (!value) {
+                    error = 'Founded year is required';
+                } else {
                     const year = parseInt(value);
                     const currentYear = new Date().getFullYear();
                     if (isNaN(year) || year < 1900 || year > currentYear) {
@@ -144,30 +150,89 @@ const CompanyOnboarding = () => {
                 }
                 break;
 
+            case 'headquarters':
+                if (!value) {
+                    error = 'Headquarters is required';
+                }
+                break;
+
+            case 'website':
+                if (!value) {
+                    error = 'Website is required';
+                } else if (!/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) {
+                    error = 'Please enter a valid URL';
+                }
+                break;
+
+            case 'linkedin':
+                if (!value) {
+                    error = 'LinkedIn is required';
+                } else if (!/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) {
+                    error = 'Please enter a valid URL';
+                }
+                break;
+
+            case 'twitter':
+                if (!value) {
+                    error = 'Twitter is required';
+                } else if (!/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) {
+                    error = 'Please enter a valid URL';
+                }
+                break;
+
             case 'email':
-                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                if (!value) {
+                    error = 'Email is required';
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     error = 'Please enter a valid email address';
                 }
                 break;
 
             case 'phone':
-                if (value && !/^[\d\s\-\+\(\)]+$/.test(value)) {
+                if (!value) {
+                    error = 'Phone number is required';
+                } else if (!/^[\d\s\-\+\(\)]+$/.test(value)) {
                     error = 'Please enter a valid phone number';
                 }
                 break;
 
-            case 'website':
-            case 'linkedin':
-            case 'twitter':
-            case 'facebook':
-                if (value && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) {
-                    error = 'Please enter a valid URL';
+            case 'address':
+                if (!value) {
+                    error = 'Address is required';
+                } else if (value.trim().length > 200) {
+                    error = 'Address must be less than 200 characters';
                 }
                 break;
 
-            case 'address':
-                if (value && value.trim().length > 200) {
-                    error = 'Address must be less than 200 characters';
+            case 'city':
+                if (!value) {
+                    error = 'City is required';
+                }
+                break;
+
+            case 'country':
+                if (!value) {
+                    error = 'Country is required';
+                }
+                break;
+
+            case 'postalCode':
+                if (!value) {
+                    error = 'Postal code is required';
+                }
+                break;
+
+            case 'customSocialName':
+                if (formData.customSocialLink && !value) {
+                    error = 'Platform name is required when providing a social media link';
+                }
+                break;
+
+            case 'customSocialLink':
+                if (formData.customSocialName && !value) {
+                    error = 'Social media link is required when providing a platform name';
+                } else if (value && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) {
+                    error = 'Please enter a valid URL';
                 }
                 break;
 
@@ -198,7 +263,8 @@ const CompanyOnboarding = () => {
                 stepErrors.website = validateField('website', formData.website);
                 stepErrors.linkedin = validateField('linkedin', formData.linkedin);
                 stepErrors.twitter = validateField('twitter', formData.twitter);
-                stepErrors.facebook = validateField('facebook', formData.facebook);
+                stepErrors.customSocialName = validateField('customSocialName', formData.customSocialName);
+                stepErrors.customSocialLink = validateField('customSocialLink', formData.customSocialLink);
                 break;
 
             case 4:
@@ -349,7 +415,7 @@ const CompanyOnboarding = () => {
                     stepFields.push('foundedYear', 'companySize', 'industry', 'headquarters');
                     break;
                 case 3:
-                    stepFields.push('website', 'linkedin', 'twitter', 'facebook');
+                    stepFields.push('website', 'linkedin', 'twitter', 'customSocialName', 'customSocialLink');
                     break;
                 case 4:
                     stepFields.push('email', 'phone', 'address', 'city', 'country', 'postalCode');
@@ -392,7 +458,7 @@ const CompanyOnboarding = () => {
 
         if (hasErrors) {
             // Mark all fields as touched
-            const allFields = ['companyName', 'aboutUs', 'foundedYear', 'companySize', 'industry', 'headquarters', 'website', 'linkedin', 'twitter', 'facebook', 'email', 'phone', 'address', 'city', 'country', 'postalCode'];
+            const allFields = ['companyName', 'aboutUs', 'foundedYear', 'companySize', 'industry', 'headquarters', 'website', 'linkedin', 'twitter', 'customSocialName', 'customSocialLink', 'email', 'phone', 'address', 'city', 'country', 'postalCode'];
             const newTouched = {};
             allFields.forEach(field => {
                 newTouched[field] = true;
@@ -434,7 +500,8 @@ const CompanyOnboarding = () => {
                 website: '',
                 linkedin: '',
                 twitter: '',
-                facebook: '',
+                customSocialName: '',
+                customSocialLink: '',
                 email: '',
                 phone: '',
                 address: '',
@@ -650,13 +717,20 @@ const CompanyOnboarding = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label fw-bold">Facebook</label>
+                            <label className="form-label fw-bold">Custom Social Media</label>
+                            <input
+                                type="text"
+                                className="form-control mb-2"
+                                value={formData.customSocialName}
+                                onChange={(e) => handleInputChange('customSocialName', e.target.value)}
+                                placeholder="Platform name (e.g., Instagram, YouTube)"
+                            />
                             <input
                                 type="url"
                                 className="form-control"
-                                value={formData.facebook}
-                                onChange={(e) => handleInputChange('facebook', e.target.value)}
-                                placeholder="https://www.facebook.com/yourcompany"
+                                value={formData.customSocialLink}
+                                onChange={(e) => handleInputChange('customSocialLink', e.target.value)}
+                                placeholder="https://www.instagram.com/yourcompany"
                             />
                         </div>
                     </div>
@@ -807,9 +881,12 @@ const CompanyOnboarding = () => {
                         <div></div>
                     )}
                     <button
-                        className="btn btn-primary ms-auto"
+                        className="btn btn-primary ms-auto text-white border-0"
                         onClick={handleNext}
                         disabled={uploading}
+                        style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                     >
                         {uploading ? 'Uploading...' : currentStep === 4 ? (editMode ? 'Update Profile' : 'Submit') : 'Save & Next'}
                         {currentStep < 4 && <ArrowRight size={16} className="ms-2" />}

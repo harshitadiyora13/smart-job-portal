@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import JobCard from '../components/JobCard';
 import { Search, MapPin, Filter } from 'lucide-react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const JobFeed = () => {
     const [jobs, setJobs] = useState([]);
@@ -53,56 +54,72 @@ const JobFeed = () => {
         });
 
     return (
-        <div className="bg-slate-50 min-h-screen pt-8 pb-20">
-            <div className="max-w-6xl mx-auto px-4">
+        <div className="min-vh-100 bg-light">
+            <Navbar />
+            <div className="container py-5">
                 {/* Header & Search Bar */}
-                <div className="mb-10 text-center">
-                    <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Find Your Dream Job</h1>
-                    <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto bg-white p-2 rounded-2xl shadow-lg border border-slate-100">
-
-                        <div className="flex-1 flex items-center px-4 border-r border-slate-100">
-                            <Search className="text-slate-400 mr-2" />
-                            <input
-                                type="text"
-                                placeholder="Job title or company..."
-                                className="w-full py-3 outline-none text-slate-700"
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                <div className="mb-5 text-center">
+                    <h1 className="display-4 fw-bold mb-4">Find Your Dream Job</h1>
+                    <div className="row justify-content-center">
+                        <div className="col-md-8">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-body p-3">
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-white border-end-0">
+                                            <Search size={20} className="text-muted" />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="form-control border-start-0"
+                                            placeholder="Job title or company..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                        <button className="btn btn-primary text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-3">
+                                <select
+                                    className="form-select"
+                                    value={selectedCategory}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                >
+                                    <option value="">All Categories</option>
+                                    {categories.map((c) => (
+                                        <option key={c._id} value={c._id}>{c.name}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                        <button className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all">
-                            Search
-                        </button>
-                    </div>
-
-                    <div className="max-w-3xl mx-auto mt-4">
-                        <select
-                            className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700"
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
-                            <option value="">All Categories</option>
-                            {categories.map((c) => (
-                                <option key={c._id} value={c._id}>{c.name}</option>
-                            ))}
-                        </select>
                     </div>
                 </div>
 
                 {/* Job List Grid */}
                 {loading ? (
-                    <div className="flex justify-center py-20">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div className="text-center py-5">
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 ) : error ? (
-                    <p className="text-center text-slate-500 py-10">{error}</p>
+                    <div className="alert alert-danger text-center">{error}</div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="row g-4">
                         {filteredJobs.length > 0 ? (
                             filteredJobs.map(job => (
-                                <JobCard key={job._id} job={job} />
+                                <div key={job._id} className="col-md-6">
+                                    <JobCard job={job} />
+                                </div>
                             ))
                         ) : (
-                            <p className="text-center col-span-2 text-slate-500 py-10">No jobs found matching your search.</p>
+                            <div className="col-12">
+                                <div className="alert alert-info text-center">
+                                    No jobs found matching your search.
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}

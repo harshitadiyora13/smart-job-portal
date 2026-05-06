@@ -421,8 +421,11 @@ const ReviewForm = ({ companyId, onReviewSubmitted, currentUser }) => {
                         </small>
                         <button
                             type="submit"
-                            className="btn btn-primary d-flex align-items-center gap-2"
+                            className="btn btn-primary d-flex align-items-center gap-2 text-white border-0"
                             disabled={loading}
+                            style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                            onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                            onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                         >
                             {loading ? (
                                 <span className="spinner-border spinner-border-sm" />

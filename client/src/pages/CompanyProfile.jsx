@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Building2, MapPin, Users, Calendar, Globe, Linkedin, Twitter, Facebook, Mail, Phone, ExternalLink, Briefcase, Edit } from "lucide-react";
+import { ArrowLeft, Building2, MapPin, Users, Calendar, Globe, Linkedin, Twitter, Mail, Phone, ExternalLink, Briefcase, Edit } from "lucide-react";
 import axios from "axios";
 import ReviewsList from "../components/ReviewsList";
 
@@ -76,7 +76,7 @@ const CompanyProfile = () => {
                     <Building2 size={64} className="text-muted mb-3" />
                     <h3 className="text-muted">Company Profile Not Found</h3>
                     <p className="text-muted mb-4">This company hasn't set up their profile yet.</p>
-                    <button className="btn btn-primary" onClick={handleBack}>
+                    <button className="btn btn-primary text-white border-0" onClick={handleBack} style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                         <ArrowLeft size={18} className="me-2" />
                         Go Back
                     </button>
@@ -102,8 +102,11 @@ const CompanyProfile = () => {
                         </div>
                         {isProfileOwner() && (
                             <button
-                                className="btn btn-primary d-flex align-items-center gap-2"
+                                className="btn btn-primary d-flex align-items-center gap-2 text-white border-0"
                                 onClick={handleEditProfile}
+                                style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                             >
                                 <Edit size={18} />
                                 Edit Profile
@@ -166,10 +169,10 @@ const CompanyProfile = () => {
                                                 Twitter
                                             </a>
                                         )}
-                                        {companyProfile.facebook && (
-                                            <a href={companyProfile.facebook} target="_blank" className="btn btn-sm btn-outline-primary">
-                                                <Facebook size={14} className="me-1" />
-                                                Facebook
+                                        {companyProfile.customSocialName && companyProfile.customSocialLink && (
+                                            <a href={companyProfile.customSocialLink} target="_blank" className="btn btn-sm btn-outline-primary">
+                                                <Globe size={14} className="me-1" />
+                                                {companyProfile.customSocialName}
                                             </a>
                                         )}
                                     </div>
@@ -247,8 +250,11 @@ const CompanyProfile = () => {
                                                             <td>{new Date(job.createdAt).toLocaleDateString()}</td>
                                                             <td className="text-center pe-4">
                                                                 <button
-                                                                    className="btn btn-sm btn-primary rounded-pill px-3"
+                                                                    className="btn btn-sm btn-primary rounded-pill px-3 text-white border-0"
                                                                     onClick={() => navigate(`/job/${job._id}`)}
+                                                                    style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                                                    onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                                                    onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                                                 >
                                                                     View Details
                                                                 </button>

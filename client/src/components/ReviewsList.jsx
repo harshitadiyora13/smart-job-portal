@@ -157,11 +157,11 @@ const ReviewsList = ({ companyId, currentUser, isCompanyOwner = false }) => {
                 <Star size={48} className="text-danger mb-3" />
                 <h5 className="text-danger">Error Loading Reviews</h5>
                 <p className="text-muted">{error}</p>
-                <button className="btn btn-primary" onClick={() => {
+                <button className="btn btn-primary text-white border-0" onClick={() => {
                     setError(null);
                     fetchReviews();
                     fetchReviewStats();
-                }}>
+                }} style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                     Try Again
                 </button>
             </div>
@@ -175,8 +175,11 @@ const ReviewsList = ({ companyId, currentUser, isCompanyOwner = false }) => {
                 <div className="mb-4">
                     {!showReviewForm ? (
                         <button
-                            className="btn btn-primary d-flex align-items-center gap-2"
+                            className="btn btn-primary d-flex align-items-center gap-2 text-white border-0"
                             onClick={() => setShowReviewForm(true)}
+                            style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                            onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                            onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                         >
                             <Star size={16} />
                             Write a Review

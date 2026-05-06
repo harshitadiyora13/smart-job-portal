@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Briefcase, Users, TrendingUp, Shield, ArrowRight, Star, MapPin, Clock, DollarSign, CheckCircle, Zap, Target, Globe, Award, Menu, X, ChevronRight, UserCheck, FileText, BarChart3, MessageSquare, Heart, Linkedin, Twitter, Github, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import '../styles/LandingPage.css';
+import Navbar from '../components/Navbar';
 
 const LandingPage = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -136,41 +137,7 @@ const LandingPage = () => {
 
     return (
         <div className="min-vh-100">
-            {/* Navigation */}
-            <nav className={`navbar navbar-expand-lg navbar-light sticky-top transition-all ${scrolled ? 'bg-white shadow-lg' : 'bg-white shadow-sm'}`}>
-                <div className="container">
-                    <Link to="/" className="navbar-brand fw-bold text-primary d-flex align-items-center">
-                        <Briefcase size={24} className="me-2" />
-                        SmartHire
-                    </Link>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className={`collapse navbar-collapse ${mobileMenuOpen ? 'show' : ''}`}>
-                        <ul className="navbar-nav ms-auto">
-                            <li className="nav-item">
-                                <a className="nav-link" href="#features">Features</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#how-it-works">How It Works</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#testimonials">Testimonials</a>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/login" className="btn btn-outline-primary me-2">Login</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/register" className="btn d-flex align-items-center bg-primary gap-2 shadow-sm text-white px-3">Sign Up</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* Hero Section */}
             <section className="bg-primary text-white py-5">

@@ -319,8 +319,11 @@ const MyApplications = () => {
                                 <h5>No applications yet</h5>
                                 <p>Start applying for jobs to see your application history here.</p>
                                 <button
-                                    className="btn btn-primary"
+                                    className="btn btn-primary text-white border-0"
                                     onClick={() => navigate("/dashboard/jobseeker")}
+                                    style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                    onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                    onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                 >
                                     Browse Jobs
                                 </button>

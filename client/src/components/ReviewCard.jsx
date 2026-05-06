@@ -377,7 +377,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                                 required
                             />
                             <div className="d-flex gap-2">
-                                <button type="submit" className="btn btn-primary btn-sm">Save</button>
+                                <button type="submit" className="btn btn-primary btn-sm text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>Save</button>
                                 <button type="button" className="btn btn-secondary btn-sm" onClick={() => setIsEditing(false)}>
                                     Cancel
                                 </button>
@@ -405,8 +405,11 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex gap-3">
                         <button
-                            className={`btn btn-sm d-flex align-items-center gap-1 ${helpful ? 'btn-primary' : 'btn-outline-primary'}`}
+                            className={`btn btn-sm d-flex align-items-center gap-1 ${helpful ? 'btn-primary text-white border-0' : 'btn-outline-primary'}`}
                             onClick={handleHelpful}
+                            style={helpful ? { background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" } : {}}
+                            onMouseEnter={e => helpful && (e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)')}
+                            onMouseLeave={e => helpful && (e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)')}
                         >
                             <ThumbsUp size={14} />
                             Helpful {helpfulCount > 0 && `(${helpfulCount})`}
@@ -427,7 +430,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             )}
 
                             {isCompanyOwner && !review.companyResponse && (
-                                <button className="btn btn-sm btn-primary" onClick={() => setIsResponding(true)}>
+                                <button className="btn btn-sm btn-primary text-white border-0" onClick={() => setIsResponding(true)} style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                                     <MessageSquare size={14} /> Respond
                                 </button>
                             )}
@@ -450,7 +453,7 @@ const ReviewCard = ({ review, currentUser, onReviewUpdate, onReviewDelete, showA
                             />
                         </div>
                         <div className="d-flex gap-2">
-                            <button type="submit" className="btn btn-primary btn-sm">Post Response</button>
+                            <button type="submit" className="btn btn-primary btn-sm text-white border-0" style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>Post Response</button>
                             <button type="button" className="btn btn-secondary btn-sm" onClick={() => setIsResponding(false)}>
                                 Cancel
                             </button>

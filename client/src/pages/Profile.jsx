@@ -434,7 +434,7 @@ const Profile = () => {
                                                 placeholder="Add a skill"
                                                 onKeyPress={(e) => e.key === 'Enter' && addSkill()}
                                             />
-                                            <button className="btn btn-primary" onClick={addSkill}>
+                                            <button className="btn btn-primary text-white border-0" onClick={addSkill} style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                                                 <Plus size={16} />
                                             </button>
                                         </div>
@@ -572,7 +572,7 @@ const Profile = () => {
                                                     />
                                                 </div>
                                                 <div className="col-md-2">
-                                                    <button className="btn btn-primary w-100" onClick={addExperience}>
+                                                    <button className="btn btn-primary w-100 text-white border-0" onClick={addExperience} style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                                                         <Plus size={16} />
                                                     </button>
                                                 </div>
@@ -659,7 +659,7 @@ const Profile = () => {
                                                     />
                                                 </div>
                                                 <div className="col-md-1">
-                                                    <button className="btn btn-primary w-100" onClick={addEducation}>
+                                                    <button className="btn btn-primary w-100 text-white border-0" onClick={addEducation} style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }} onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'} onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}>
                                                         <Plus size={16} />
                                                     </button>
                                                 </div>

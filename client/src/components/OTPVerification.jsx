@@ -66,7 +66,7 @@ const OTPVerification = ({ email, onSuccess, onCancel }) => {
     const handlePaste = (e) => {
         e.preventDefault();
         const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-        
+
         if (pastedData.length === 6) {
             const newOtp = pastedData.split('');
             setOtp(newOtp);
@@ -85,7 +85,7 @@ const OTPVerification = ({ email, onSuccess, onCancel }) => {
 
     const handleVerify = async (fullOtp = null) => {
         const otpCode = fullOtp || otp.join('');
-        
+
         if (otpCode.length !== 6) {
             setError('Please enter all 6 digits');
             return;
@@ -101,7 +101,7 @@ const OTPVerification = ({ email, onSuccess, onCancel }) => {
             });
 
             setSuccess('Verification successful!');
-            
+
             // Store token and user data
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
@@ -115,7 +115,7 @@ const OTPVerification = ({ email, onSuccess, onCancel }) => {
         } catch (err) {
             const errorMsg = err.response?.data?.message || 'Verification failed';
             setError(errorMsg);
-            
+
             if (err.response?.data?.remainingAttempts !== undefined) {
                 setRemainingAttempts(err.response.data.remainingAttempts);
             }
@@ -152,7 +152,7 @@ const OTPVerification = ({ email, onSuccess, onCancel }) => {
         } catch (err) {
             const errorMsg = err.response?.data?.message || 'Failed to resend OTP';
             setError(errorMsg);
-            
+
             if (err.response?.data?.cooldown) {
                 setCooldown(err.response.data.cooldown);
             }
@@ -227,7 +227,10 @@ const OTPVerification = ({ email, onSuccess, onCancel }) => {
             <button
                 onClick={() => handleVerify()}
                 disabled={loading || otp.join('').length !== 6}
-                className="btn btn-primary w-100 py-2 mb-3 fw-semibold"
+                className="btn btn-primary w-100 py-2 mb-3 fw-semibold text-white border-0"
+                style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
             >
                 {loading ? (
                     <span className="d-flex align-items-center justify-content-center gap-2">

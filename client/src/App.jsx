@@ -15,6 +15,8 @@ import LandingPage from "./pages/LandingPage";
 import DashboardRedirect from "./components/DashboardRedirect";
 import SavedJobs from "./pages/SavedJobs";
 import Notifications from "./pages/Notifications";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 // --- NEW IMPORTS ---
 import JobDetails from "./pages/JobDetails";
@@ -44,6 +46,8 @@ function App() {
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/resend-verification" element={<ResendVerification />} />
         <Route path="/jobs" element={<JobFeed />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* Role-based dashboard redirect */}
         <Route

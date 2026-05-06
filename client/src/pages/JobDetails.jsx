@@ -269,8 +269,11 @@ const JobDetails = () => {
                 <div className="text-center py-5">
                     <h4 className="text-muted">Job not found</h4>
                     <button
-                        className="btn btn-primary mt-3"
+                        className="btn btn-primary mt-3 text-white border-0"
                         onClick={() => navigate(getBackPath())}
+                        style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                     >
                         Back to Dashboard
                     </button>
@@ -351,8 +354,11 @@ const JobDetails = () => {
                             <div className="d-flex gap-3 pt-3 border-top">
                                 {user?.role === "recruiter" ? (
                                     <button
-                                        className="btn btn-primary d-flex align-items-center gap-2"
+                                        className="btn btn-primary d-flex align-items-center gap-2 text-white border-0"
                                         onClick={handleViewApplicants}
+                                        style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                     >
                                         <Users size={18} />
                                         View Applicants
@@ -367,9 +373,12 @@ const JobDetails = () => {
                                     </button>
                                 ) : (
                                     <button
-                                        className="btn btn-primary d-flex align-items-center gap-2"
+                                        className="btn btn-primary d-flex align-items-center gap-2 text-white border-0"
                                         onClick={handleApply}
                                         disabled={applying}
+                                        style={{ background: "linear-gradient(to right, #2F80ED, #1C5ED6)", transition: "all 0.3s ease" }}
+                                        onMouseEnter={e => e.target.style.background = 'linear-gradient(to right, #1C5ED6, #174DB0)'}
+                                        onMouseLeave={e => e.target.style.background = 'linear-gradient(to right, #2F80ED, #1C5ED6)'}
                                     >
                                         <Send size={18} />
                                         {applying ? "Applying..." : "Apply Now"}
